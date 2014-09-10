@@ -10,7 +10,7 @@
 	</parent>
 	
 	<artifactId>swt-widgets</artifactId>
-	<version>${swt-widgets}</version>
+	<version>${swt-widgets.version}</version>
 	<packaging>jar</packaging>
 	<name>SWT Widgets</name>
 
