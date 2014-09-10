@@ -13,6 +13,7 @@
 	<version>${swt-widgets.version}</version>
 	<packaging>jar</packaging>
 	<name>SWT Widgets</name>
+	<url>https://github.com/Haixing-Hu/swt-widgets/</url>
 
 	<repositories>
 		<repository>
@@ -20,128 +21,6 @@
 			<url>http://swt-repo.googlecode.com/svn/repo/</url>
 		</repository>
 	</repositories>
-<!-- 
-	<profiles>
-		<profile>
-			<id>mac_x86_64</id>
-			<activation>
-				<os>
-					<name>mac os x</name>
-				</os>
-			</activation>
-			<properties>
-				<swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>osxappbundle-maven-plugin</artifactId>
-						<version>1.0-alpha-4-SNAPSHOT</version>
-						<configuration>
-							<mainClass>com.github.haixing_hu.ilibrary.Application</mainClass>
-							<jvmVersion>1.6+</jvmVersion>
-							<vmOptions>-XstartOnFirstThread</vmOptions>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>bundle</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>win_x86</id>
-			<activation>
-				<os>
-					<family>windows</family>
-					<arch>x86</arch>
-				</os>
-			</activation>
-			<properties>
-				<swt.artifactId>org.eclipse.swt.win32.win32.x86</swt.artifactId>
-			</properties>
-		</profile>
-		<profile>
-			<id>win_x86_64</id>
-			<activation>
-				<os>
-					<family>windows</family>
-					<arch>amd64</arch>
-				</os>
-			</activation>
-			<properties>
-				<swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
-			</properties>
-		</profile>
-		<profile>
-			<id>linux_x86</id>
-			<activation>
-				<os>
-					<family>linux</family>
-					<arch>x86</arch>
-				</os>
-			</activation>
-			<properties>
-				<swt.artifactId>org.eclipse.swt.gtk.linux.x86</swt.artifactId>
-			</properties>
-		</profile>
-		<profile>
-			<id>linux_x86_64</id>
-			<activation>
-				<os>
-					<family>linux</family>
-					<arch>amd64</arch>
-				</os>
-			</activation>
-			<properties>
-				<swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
-			</properties>
-		</profile>
-	</profiles>
- -->
-	<build>
-		<plugins>		
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>com.github.haixing_hu.ilibrary.Application</mainClass>
-							<classpathPrefix>lib/</classpathPrefix>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.5.1</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>
-								${project.build.directory}/lib/
-							</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
 
 	<dependencies>				
 		<dependency>
