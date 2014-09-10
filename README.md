@@ -4,15 +4,17 @@
 Collect some useful SWT widgets for my applications.
 
 
-## StarRating
+## Components
+
+### StarRating
 
 This is a modification of the StarRating component of the [OPAL][opal] project. It implements a simple star rating toolbar that allows the user to rate anything. 
 
-### Screen Shot
+#### Screen Shot
 
 ![Screen Shot of the StarRating Component](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/StarRatingExample.png)
 
-### Usage
+#### Usage
 
 In order to create a StarRating component, you must provide the parent component, the SWT styles, the size of the star (`StarRating.Size.SMALL` or `StarRating.Size.BIG`), and the maximum number of stars (i.e., the maximum rating level).
 
@@ -30,7 +32,7 @@ Note that there is a difference between this implementation and the [OPAL][opal]
 
 In this way, we could easily unselect all stars. 
 		 
-### Example
+#### Example
 
 An example called `StarRatingExample.java` is located in the directory `src/test/java/com/github/haixing_hu/swt/starrating/` of the source repository.
 
