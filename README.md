@@ -8,16 +8,12 @@ Some of those widgets are ported from other open source projects, others are wri
 1. I don't want my project depends on too many other projects, since it's hard to mange a lot of dependencies.
 2. Sometimes I have to modify the widgets to satisfy my own requirements.
 
-## Build the Project
+## Dependent Projects
 
-This project depends on some other projects of mine:
+This project depends on the following projects. The depended projects **must** be built in the order listed below.
 
-- [pom-root](https://github.com/Haixing-Hu/pom-root)
-- [Java-Commons](https://github.com/Haixing-Hu/commons)
-
-You should checkout the above projects and build them using maven in the above order (**NOTE: the building order is important**). Then build this project using maven:
-
-	mvn clean install
+* [pom-root](https://github.com/Haixing-Hu/pom-root)
+* [Java-Commons](https://github.com/Haixing-Hu/commons)
 
 ## Widgets
 
