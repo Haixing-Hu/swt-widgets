@@ -10,6 +10,14 @@ Collect some useful SWT widgets for my applications.
 
 This is a modification of the StarRating component of the [OPAL][opal] project. It implements a simple star rating toolbar that allows the user to rate anything. 
 
+There is a difference between this implementation and the [OPAL][opal] implementaiton: when the user click a selected star, 
+
+- if the star has not been selected, the star and all stars below it will be selected;
+- if the star is the highest star that has been selected, the star will be unselect by the clicking; 
+- if the star is not the highest star that has been selected, the clicking will cause the star and all stars below it be selected and all stars above it be unselected. 
+
+In this way, we could easily unselect all stars. 
+
 #### Screen Shot
 
 ![Screen Shot of the StarRating Component](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/StarRatingExample.png)
@@ -23,14 +31,6 @@ In order to create a StarRating component, you must provide the parent component
 Or you can use the default maximum number of starts (which is 5):
 
 	StarRating rating = new StarRating(shell, SWT.NONE, StarRating.Size.BIG);
-
-Note that there is a difference between this implementation and the [OPAL][opal] implementaiton: when the user click a selected star, 
-
-- if the star has not been selected, the star and all stars below it will be selected;
-- if the star is the highest star that has been selected, the star will be unselect by the clicking; 
-- if the star is not the highest star that has been selected, the clicking will cause the star and all stars below it be selected and all stars above it be unselected. 
-
-In this way, we could easily unselect all stars. 
 		 
 #### Example
 
