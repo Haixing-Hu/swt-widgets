@@ -27,7 +27,7 @@ import com.github.haixing_hu.swt.starrating.StarRating;
  * @author Laurent CARON
  * @author Haixing Hu
  */
-public class StarRatingSnippet {
+public class StarRatingExample {
 
 	/**
 	 * @param args
