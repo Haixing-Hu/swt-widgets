@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation.
- *     Haixing Hu (starfish.hu@gmail.com)  - Modification for personal use.
+ *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
 package com.github.haixing_hu.swt.breadcrumb;
 
@@ -28,7 +28,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Widget;
 
-import com.github.haixing_hu.swt.utils.SWTGraphicUtil;
+import com.github.haixing_hu.swt.utils.SWTResourceManager;
+
 
 /**
  * Instances of this class support the layout of selectable bar items displayed
@@ -51,14 +52,14 @@ public class BreadCrumb extends Canvas {
   private static final String IS_BUTTON_PRESSED = BreadCrumb.class.toString()
       + "_pressed";
   private final List<BreadCrumbItem> items;
-  private static Color START_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(
+  private static Color START_GRADIENT_COLOR = SWTResourceManager.getColor(
       255, 255, 255);
-  private static Color END_GRADIENT_COLOR = SWTGraphicUtil.getColorSafely(224,
+  private static Color END_GRADIENT_COLOR = SWTResourceManager.getColor(224,
       224, 224);
-  static Color BORDER_COLOR = SWTGraphicUtil.getColorSafely(128, 128, 128);
-  static Color BORDER_COLOR_1 = SWTGraphicUtil.getColorSafely(212, 212, 212);
-  static Color BORDER_COLOR_2 = SWTGraphicUtil.getColorSafely(229, 229, 229);
-  static Color BORDER_COLOR_3 = SWTGraphicUtil.getColorSafely(243, 243, 243);
+  static Color BORDER_COLOR = SWTResourceManager.getColor(128, 128, 128);
+  static Color BORDER_COLOR_1 = SWTResourceManager.getColor(212, 212, 212);
+  static Color BORDER_COLOR_2 = SWTResourceManager.getColor(229, 229, 229);
+  static Color BORDER_COLOR_3 = SWTResourceManager.getColor(243, 243, 243);
   boolean hasBorder = false;
 
   /**

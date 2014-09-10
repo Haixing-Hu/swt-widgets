@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
- *     Haixing Hu (starfish.hu@gmail.com)  - Modification for personal use.
+ *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
 package com.github.haixing_hu.gwt.breadcrumb;
 
@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.github.haixing_hu.swt.breadcrumb.BreadCrumb;
 import com.github.haixing_hu.swt.breadcrumb.BreadCrumbItem;
+import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
  * A simple example for the BreadCrumb widget.
@@ -53,9 +54,8 @@ public class BreadCrumbExample {
         display.sleep();
       }
     }
-
+    SWTResourceManager.dispose();
     display.dispose();
-
   }
 
   private static void createImages() {

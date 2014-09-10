@@ -6,8 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Laurent CARON (laurent.caron@gmail.com) - initial API and implementation
- *     Haixing Hu (starfish.hu@gmail.com)  - Modification for personal use.
+ *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
+ *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
 package com.github.haixing_hu.swt.starrating;
 

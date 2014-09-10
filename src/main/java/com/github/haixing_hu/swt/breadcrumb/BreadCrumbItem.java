@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
- *     Haixing Hu (starfish.hu@gmail.com)  - Modification for personal use.
+ *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
 package com.github.haixing_hu.swt.breadcrumb;
 
@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 
-import com.github.haixing_hu.swt.utils.SWTGraphicUtil;
+import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
  * Instances of this class represent a selectable user interface object that
@@ -44,8 +44,7 @@ public class BreadCrumbItem extends Item {
 
   private static final int MIN_WIDTH = 40;
   private static final int MARGIN = 4;
-  private static Color SELECTED_COLOR = SWTGraphicUtil.getColorSafely(223, 220,
-      213);
+  private static Color SELECTED_COLOR = SWTResourceManager.getColor(223, 220, 213);
 
   private final BreadCrumb parentBreadcrumb;
   private final List<SelectionListener> selectionListeners;
