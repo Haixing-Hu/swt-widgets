@@ -19,9 +19,9 @@ This project depends on the following projects. The depended projects **must** b
 
 Currently the following widgets are supported.
 
-- [StarRating](#StarRating)
-- [BreadCrumb](#BreadCrumb)
-- [Header](#Header)
+- [StarRating](#starrating)
+- [BreadCrumb](#breadcrumb)
+- [Header](#header)
 
 ### StarRating
 
