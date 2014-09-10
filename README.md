@@ -17,6 +17,12 @@ This project depends on the following projects. The depended projects **must** b
 
 ## Widgets
 
+Currently the following widgets are supported.
+
+- [StarRating](#StarRating)
+- [BreadCrumb](#BreadCrumb)
+- [Header](#Header)
+
 ### StarRating
 
 This is a modification of the StarRating widget of the [OPAL][opal] project. It implements a simple star rating toolbar that allows the user to rate anything. 
@@ -86,6 +92,35 @@ Example usage:
 An example is located in the source repository:
 
 	src/test/java/com/github/haixing_hu/swt/breadcrumb/BreadCrumbExample.java
+
+### Header
+
+This is the Header widget comes from the [OPAL][opal] project, with some refactoring of the source codes. 
+
+
+#### Screen Shot
+
+![Screen Shot of the BreadCrumb Toolbar](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/HeaderExample.png)
+
+#### Usage
+
+Example Usage:
+
+	final Image icon = SWTResourceManager.getImage(HeaderExample.class,
+		    "/images/configure.png");
+	final Header header = new Header(shell, SWT.NONE);
+	header.setTitle("Header Title");
+	header.setImage(icon);
+	header.setDescription("Description area for the header. You can put all "
+	    + "<b>additional</b>, <i>relevant information</i> to the "
+	    + "description panel (or <u>jokes</u>, citations, "
+	    + "... <color=red>what you want!</color>)");
+
+#### Example
+
+An example is located in the source repository:
+
+	src/test/java/com/github/haixing_hu/swt/header/HeaderExample.java
 
 
 ## References
