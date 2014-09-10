@@ -29,7 +29,12 @@ In this way, we could easily unselect all stars.
 
 #### Usage
 
-In order to create a StarRating component, you must provide the parent component, the SWT styles, the size of the star (`StarRating.Size.SMALL` or `StarRating.Size.BIG`), and the maximum number of stars (i.e., the maximum rating level).
+In order to create a StarRating component, you must provide 
+
+- the parent component, 
+- the SWT styles, 
+- the size of the star (`StarRating.Size.SMALL` or `StarRating.Size.BIG`), and 
+- the maximum number of stars (i.e., the maximum rating level).
 
 	StarRating rating = new StarRating(shell, SWT.NONE, StarRating.Size.SMALL, 10);
 
