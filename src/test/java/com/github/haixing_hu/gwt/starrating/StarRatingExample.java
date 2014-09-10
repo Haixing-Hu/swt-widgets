@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.github.haixing_hu.swt.starrating.StarRating;
 
 /**
- * A simple snippet for the StarRating component.
+ * A simple example for the StarRating widget.
  *
  * @author Laurent CARON
  * @author Haixing Hu

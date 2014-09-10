@@ -13,7 +13,7 @@ Some of those widgets are ported from other open source projects, others are wri
 
 ### StarRating
 
-This is a modification of the StarRating component of the [OPAL][opal] project. It implements a simple star rating toolbar that allows the user to rate anything. 
+This is a modification of the StarRating widget of the [OPAL][opal] project. It implements a simple star rating toolbar that allows the user to rate anything. 
 
 There is a difference between this implementation and the [OPAL][opal] implementaiton: when the user click a selected star, 
 
@@ -25,7 +25,7 @@ In this way, we could easily unselect all stars.
 
 #### Screen Shot
 
-![Screen Shot of the StarRating Component](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/StarRatingExample.png)
+![Screen Shot of the StarRating Widget](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/StarRatingExample.png)
 
 #### Usage
 
@@ -47,6 +47,39 @@ Or you can use the default maximum number of starts (which is 5):
 An example is located in the source repository:
 
 	src/test/java/com/github/haixing_hu/swt/starrating/StarRatingExample.java
+
+
+###  BreadCrumb
+
+This is the BreadCrumb toolbar comes from the [OPAL][opal] project.
+
+#### Screen Shot
+
+![Screen Shot of the BreadCrumb Toolbar](https://raw.githubusercontent.com/Haixing-Hu/swt-widgets/master/screenshots/BreadCrumbExample.png)
+
+##### Usage
+
+Example usage:
+
+	final BreadCrumb bc = new BreadCrumb(shell, SWT.BORDER);
+	
+	final BreadCrumbItem labelItem = new BreadCrumbItem(bc, SWT.CENTER|SWT.NONE);
+	labelItem.setText("Label");
+	
+	final BreadCrumbItem buttonItem = new BreadCrumbItem(bc, SWT.CENTER|SWT.PUSH);
+	buttonItem.setText("Button");
+	
+	final BreadCrumbItem toggleItem = new BreadCrumbItem(bc, SWT.CENTER|SWT.TOGGLE);
+	toggleItem.setText("Toggle");
+	toggleItem.setImage(toggleImage);
+	toggleItem.setSelectionImage(toggleSelectionImage);
+
+
+##### Example
+
+An example is located in the source repository:
+
+	src/test/java/com/github/haixing_hu/swt/breadcrumb/BreadCrumbExample.java
 
 
 ## References
