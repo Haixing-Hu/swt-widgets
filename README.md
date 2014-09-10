@@ -39,7 +39,9 @@ Or you can use the default maximum number of starts (which is 5):
 		 
 #### Example
 
-An example called `StarRatingExample.java` is located in the directory `src/test/java/com/github/haixing_hu/swt/starrating/` of the source repository.
+An example is located in the source repository:
+
+	src/test/java/com/github/haixing_hu/swt/starrating/StarRatingExample.java
 
 
 ## References
