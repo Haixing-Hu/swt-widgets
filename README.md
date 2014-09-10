@@ -1,10 +1,15 @@
 # swt-widgets
 
 
-Collect some useful SWT widgets for my applications.
+This repository collects some of my favourite SWT widgets. 
+
+Some of those widgets are ported from other open source projects, others are written by myself. The reasons why I port codes from other open source projects instead of using them directly are: 
+
+1. I don't want my project depends on too many other projects, since it's hard to mange a lot of dependencies.
+2. Sometimes I have to modify the widgets to satisfy my own requirements.
 
 
-## Components
+## Widgets
 
 ### StarRating
 
