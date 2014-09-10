@@ -19,9 +19,9 @@ This project depends on the following projects. The depended projects **must** b
 
 Currently the following widgets are supported.
 
-- [StarRating](.#StarRating)
-- [BreadCrumb](.#BreadCrumb)
-- [Header](.#Header)
+- [StarRating](#StarRating)
+- [BreadCrumb](#BreadCrumb)
+- [Header](#Header)
 
 ### StarRating
 
@@ -61,7 +61,7 @@ An example is located in the source repository:
 	src/test/java/com/github/haixing_hu/swt/starrating/StarRatingExample.java
 
 
-###  BreadCrumb
+### BreadCrumb
 
 This is the BreadCrumb toolbar comes from the [OPAL][opal] project.
 
