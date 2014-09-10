@@ -35,7 +35,7 @@ public class StarRatingExample {
 	public static void main(final String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell(display);
-		shell.setText("StarRating Snippet");
+		shell.setText("StarRating Example");
 
 		shell.setLayout(new GridLayout(2, false));
 
