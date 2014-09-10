@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (starfish.hu@gmail.com)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.gwt.starratting;
+package com.github.haixing_hu.gwt.starrating;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
