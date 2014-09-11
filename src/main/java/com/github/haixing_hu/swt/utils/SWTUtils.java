@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.slf4j.Logger;
@@ -51,11 +52,11 @@ public final class SWTUtils {
     }
   }
 
-
   /**
    * Center a shell on the primary monitor
    *
-   * @param shell shell to center
+   * @param shell
+   *          shell to center
    */
   public static void centerShell(final Shell shell) {
     final Monitor primary = shell.getDisplay().getPrimaryMonitor();
@@ -66,4 +67,23 @@ public final class SWTUtils {
     shell.setLocation(x, y);
   }
 
+  /**
+   * Gets the bounds of the monitor on which the specified shell is running.
+   *
+   * @param shell
+   *          a specified shell.
+   * @return the bounds of the monitor on which the shell is running.
+   */
+  public static Rectangle getBoundsOfMonitor(final Shell shell) {
+    final Display display = shell.getDisplay();
+    for (final Monitor monitor : display.getMonitors()) {
+      final Rectangle monitorBounds = monitor.getBounds();
+      final Rectangle shellBounds = shell.getBounds();
+      if (monitorBounds.contains(shellBounds.x, shellBounds.y)) {
+        return monitorBounds;
+      }
+    }
+    final Monitor primary = display.getPrimaryMonitor();
+    return primary.getBounds();
+  }
 }

@@ -22,7 +22,11 @@
 		</repository>
 	</repositories>
 
-	<dependencies>				
+	<dependencies>		
+		<dependency>
+			<groupId>com.github.haixing_hu</groupId>
+			<artifactId>java-commons</artifactId>
+		</dependency>		
 		<dependency>
 			<groupId>org.eclipse.swt</groupId>
 			<artifactId>${swt.artifactId}</artifactId>
