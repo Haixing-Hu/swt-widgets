@@ -27,10 +27,13 @@ Currently the following widgets are supported.
 - [BurredPanel](https://github.com/Haixing-Hu/swt-widgets/wiki/BurredPanel)
 - [PromptSupport](https://github.com/Haixing-Hu/swt-widgets/wiki/PromptSupport)
 - [RoundedToolbar](https://github.com/Haixing-Hu/swt-widgets/wiki/RoundedToolbar)
+- [Hyperlink](https://github.com/Haixing-Hu/swt-widgets/wiki/Hyperlink)
 
 ## References
 
 1. OPAL: [https://code.google.com/a/eclipselabs.org/p/opal/][opal]
+2. Novocode: [http://www.novocode.com/swt/][novocode]
 
 
 [opal]: https://code.google.com/a/eclipselabs.org/p/opal/
+[novocode]: http://www.novocode.com/swt/
