@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
-package com.github.haixing_hu.gwt.dialog;
+package com.github.haixing_hu.swt.dialog;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

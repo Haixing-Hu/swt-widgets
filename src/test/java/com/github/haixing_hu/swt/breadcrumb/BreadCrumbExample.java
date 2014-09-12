@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.gwt.breadcrumb;
+package com.github.haixing_hu.swt.breadcrumb;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

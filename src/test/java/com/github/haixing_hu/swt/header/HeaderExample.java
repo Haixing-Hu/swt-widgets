@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.gwt.header;
+package com.github.haixing_hu.swt.header;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +25,7 @@ import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
 /**
- * This snippet demonstrates the Header widget.
+ * This snippet demonstrates the {@link Header} widget.
  */
 public class HeaderExample {
 

@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.gwt.panel;
+package com.github.haixing_hu.swt.panel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -24,19 +24,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.github.haixing_hu.swt.dialog.Dialog;
-import com.github.haixing_hu.swt.panel.DarkPanel;
+import com.github.haixing_hu.swt.panel.BlurredPanel;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
 /**
- * This snippet demonstrates the dark panel
+ * This snippet demonstrates the blurred panel
  *
  */
-public class DarkPanelExample {
+public class BurredPanelExample {
 	public static void main(final String[] args) {
 		final Display display = new Display();
 		final Shell shell = new Shell();
-		shell.setText("Dark Panel Example");
+		shell.setText("Blured Panel Example");
 		shell.setLayout(new GridLayout(2, false));
 
 		createRow(shell, "First Name");
@@ -68,21 +68,19 @@ public class DarkPanelExample {
 	}
 
 	private static void createButtons(final Shell shell) {
-		final DarkPanel p = new DarkPanel(shell);
-
+		final BlurredPanel p = new BlurredPanel(shell);
 		final Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 		composite.setLayout(new GridLayout(2, false));
-
 		final Button ok = new Button(composite, SWT.PUSH);
 		ok.setText("Ok");
 		ok.setLayoutData(new GridData(SWT.END, SWT.END, true, true));
 		ok.addSelectionListener(new SelectionListener() {
-
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				p.show();
-				Dialog.isConfirmed("Confirmation", "Are you sure you want to save this form ?");
+				Dialog.isConfirmed("Confirmation",
+				    "Are you sure you want to save this form ?");
 				p.hide();
 			}
 
