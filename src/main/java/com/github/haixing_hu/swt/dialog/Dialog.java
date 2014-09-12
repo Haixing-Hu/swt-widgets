@@ -193,7 +193,7 @@ public class Dialog {
     final int centerY;
     if ((centerPolicy == Option.CENTER_ON_SCREEN)
         || (shell.getParent() == null)) {
-      final Rectangle bounds = SWTUtils.getBoundsOfMonitor(shell);
+      final Rectangle bounds = SWTUtils.getMonitorBounds(shell);
       centerX = bounds.x + ((bounds.width - preferredSize.x) / 2);
       centerY = bounds.y + ((bounds.height - preferredSize.y) / 2);
     } else {
