@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.github.haixing_hu.swt.prompt.PromptSupport;
 import com.github.haixing_hu.swt.prompt.PromptSupport.FocusBehavior;
+import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
  * A simple example for the PromptSupport utilities
@@ -54,6 +55,7 @@ public class PromptSupportExample {
 				display.sleep();
 			}
 		}
+		SWTResourceManager.dispose();
 		display.dispose();
 
 	}

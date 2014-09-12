@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.github.haixing_hu.swt.starrating.StarRating;
+import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
  * A simple example for the StarRating widget.
@@ -56,7 +57,7 @@ public class StarRatingExample {
 				display.sleep();
 			}
 		}
-
+		SWTResourceManager.dispose();
 		display.dispose();
 
 	}

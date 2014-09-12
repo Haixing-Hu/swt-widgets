@@ -62,11 +62,9 @@ public class BreadCrumbExample {
     images = new Image[5];
     final String[] fileNames = new String[] { "add.png", "bell.png",
         "feed.png", "house.png", "script.png" };
-    final Display disp = Display.getCurrent();
-    final ClassLoader cl = BreadCrumbExample.class.getClassLoader();
     for (int i = 0; i < 5; i++) {
-      final Image image = new Image(disp,
-          cl.getResourceAsStream("images/" + fileNames[i]));
+      final Image image = SWTResourceManager.getImage(BreadCrumbExample.class,
+          "/images/" + fileNames[i]);
       images[i] = image;
     }
   }

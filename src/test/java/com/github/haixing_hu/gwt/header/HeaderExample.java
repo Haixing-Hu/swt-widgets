@@ -66,8 +66,7 @@ public class HeaderExample {
 				display.sleep();
 			}
 		}
-
-		icon.dispose();
+		SWTResourceManager.dispose();
 		display.dispose();
 	}
 

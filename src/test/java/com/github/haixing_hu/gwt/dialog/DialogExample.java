@@ -203,6 +203,7 @@ public class DialogExample {
         display.sleep();
       }
     }
+    SWTResourceManager.dispose();
     display.dispose();
 
   }
