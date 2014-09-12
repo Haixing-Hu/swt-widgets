@@ -21,16 +21,15 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.label.Hyperlink;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
 /**
- * This snippet demonstrates the {@link Hyperlink} widget.
+ * This snippet demonstrates the {@link HyperlinkLabel} widget.
  *
  * @author Haixing Hu
  */
-public class HyperlinkExample {
+public class HyperlinkLabelExample {
 
   /**
    * @param args
@@ -39,7 +38,7 @@ public class HyperlinkExample {
     final Display display = new Display();
     final Shell shell = new Shell(display);
 
-    shell.setText("Hyperlink Example");
+    shell.setText("HyperlinkLabel Label Example");
     shell.setLayout(new GridLayout(2, false));
     shell.setSize(640, 350);
 
@@ -47,7 +46,8 @@ public class HyperlinkExample {
     label1.setText("Contact me at ");
     label1.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 
-    final Hyperlink link1 = new Hyperlink(shell, SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
+    final HyperlinkLabel link1 = new HyperlinkLabel(shell,
+        SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
     link1.setText("szeiger@novocode.com");
     link1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
@@ -56,7 +56,8 @@ public class HyperlinkExample {
     label2.setText("Google: ");
     label2.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
 
-    final Hyperlink link2 = new Hyperlink(shell, SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
+    final HyperlinkLabel link2 = new HyperlinkLabel(shell,
+        SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
     link2.setText("https://www.google.com");
     link2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 

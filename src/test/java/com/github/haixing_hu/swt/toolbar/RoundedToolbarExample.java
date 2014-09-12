@@ -22,8 +22,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.toolbar.RoundedToolItem;
-import com.github.haixing_hu.swt.toolbar.RoundedToolbar;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
@@ -31,7 +29,7 @@ import com.github.haixing_hu.swt.utils.SWTResourceManager;
  */
 public class RoundedToolbarExample {
 
-  private static Color grey1;
+  //private static Color grey1;
   private static Color grey2;
   private static Image iconBubble1b;
   private static Image iconBubble1w;
@@ -53,7 +51,7 @@ public class RoundedToolbarExample {
     gridLayout.horizontalSpacing = 20;
     shell.setLayout(gridLayout);
 
-    grey1 = SWTResourceManager.getColor(display, 211, 211, 211);
+    //grey1 = SWTResourceManager.getColor(display, 211, 211, 211);
     grey2 = SWTResourceManager.getColor(display, 255, 250, 250);
     iconBubble1b = SWTResourceManager.getImage(display,
         RoundedToolbarExample.class, "/images/bubble1_b.png");

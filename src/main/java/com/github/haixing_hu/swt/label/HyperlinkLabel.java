@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.TypedListener;
  * @author Stefan Zeiger
  * @since Mar 2, 2004
  */
-public class Hyperlink extends Canvas {
+public class HyperlinkLabel extends Canvas {
   private String text = "";
   private Cursor handCursor, arrowCursor;
   private Color normalForeground, activeForeground, hoverForeground;
@@ -101,7 +101,7 @@ public class Hyperlink extends Canvas {
    *              thread that created the parent</li>
    *              </ul>
    */
-  public Hyperlink(Composite parent, int style) {
+  public HyperlinkLabel(Composite parent, int style) {
     super(parent, checkStyle(style));
 
     handCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
@@ -270,7 +270,7 @@ public class Hyperlink extends Canvas {
         @Override
         public void handleEvent(Event event) {
           final boolean newCursorInControl =
-              (getDisplay().getCursorControl() == Hyperlink.this);
+              (getDisplay().getCursorControl() == HyperlinkLabel.this);
           // System.out.println("Shell (de)activated. Cursor over control: "
           //                    + newCursorInControl);
           if (cursorInControl != newCursorInControl) {
@@ -370,7 +370,7 @@ public class Hyperlink extends Canvas {
   }
 
   /**
-   * Return the Hyperlink's displayed text.
+   * Return the HyperlinkLabel's displayed text.
    *
    * @return the text of the hyperlink or null
    */
@@ -499,7 +499,7 @@ public class Hyperlink extends Canvas {
   }
 
   /**
-   * Set the Hyperlink's displayed text. The value <code>null</code> clears it.
+   * Set the HyperlinkLabel's displayed text. The value <code>null</code> clears it.
    * <p>
    * Mnemonics are indicated by an '&amp' that causes the next character to be
    * the mnemonic. When the user presses a key sequence that matches the

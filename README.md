@@ -27,7 +27,8 @@ Currently the following widgets are supported.
 - [BurredPanel](https://github.com/Haixing-Hu/swt-widgets/wiki/BurredPanel)
 - [PromptSupport](https://github.com/Haixing-Hu/swt-widgets/wiki/PromptSupport)
 - [RoundedToolbar](https://github.com/Haixing-Hu/swt-widgets/wiki/RoundedToolbar)
-- [Hyperlink](https://github.com/Haixing-Hu/swt-widgets/wiki/Hyperlink)
+- [HyperlinkLabel](https://github.com/Haixing-Hu/swt-widgets/wiki/HyperlinkLabel)
+- [BalloonWindow](https://github.com/Haixing-Hu/swt-widgets/wiki/BalloonWindow)
 
 ## References
 
