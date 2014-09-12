@@ -9,7 +9,7 @@
  *
  * Contributors:
  *     Stefan Zeiger (szeiger at novocode dot com) - Initial implementation and API.
- *     Haixing Hu (starfish.hu at gmail dot com) - Modify for personal use.
+ *     Haixing Hu (https://github.com/Haixing-Hu/) - Modify for personal use.
  *
  ******************************************************************************/
 
@@ -41,8 +41,7 @@ import org.eclipse.swt.widgets.TypedListener;
  * <p>
  * This control displays a line of text (with an optional underline) which can
  * be clicked to send a Selection event. Colors for the text and underline in
- * their normal, mouse hover and active state can be set independently. The text
- * can contain a mnemonic character for triggering the link via keyboard. Unless
+ * their normal, mouse hover and active state can be set independently. Unless
  * the control is created with the NO_FOCUS style, it accepts keyboard focus and
  * can be triggered with RETURN and SPACE while focused.
  * </p>
@@ -59,10 +58,11 @@ import org.eclipse.swt.widgets.TypedListener;
  * </p>
  *
  * @author Stefan Zeiger
+ * @author Haixing Hu
  * @since Mar 2, 2004
  */
 public class HyperlinkLabel extends Canvas {
-  private String text = "";
+  private String text;
   private Cursor handCursor, arrowCursor;
   private Color normalForeground, activeForeground, hoverForeground;
   private Color normalUnderline, activeUndeline, hoverUnderline;
@@ -71,7 +71,6 @@ public class HyperlinkLabel extends Canvas {
   private Rectangle cachedClientArea;
   private Listener shellListener;
   private final Shell shell;
-  private int mnemonic = - 1;
 
   /**
    * Constructs a new instance of this class given its parent and a style value
@@ -104,6 +103,7 @@ public class HyperlinkLabel extends Canvas {
   public HyperlinkLabel(Composite parent, int style) {
     super(parent, checkStyle(style));
 
+    text = "";
     handCursor = new Cursor(getDisplay(), SWT.CURSOR_HAND);
     arrowCursor = new Cursor(getDisplay(), SWT.CURSOR_ARROW);
     setCursor(handCursor);
@@ -196,8 +196,7 @@ public class HyperlinkLabel extends Canvas {
 
     cachedClientArea = getClientArea();
 
-    if ((style & SWT.NO_FOCUS) == 0) // Take focus
-    {
+    if ((style & SWT.NO_FOCUS) == 0) { // Take focus
       addListener(SWT.KeyDown, new Listener() {
         @Override
         public void handleEvent(Event event) {
@@ -213,15 +212,6 @@ public class HyperlinkLabel extends Canvas {
           if (event.detail == SWT.TRAVERSE_RETURN) {
             linkActivated();
             event.doit = false;
-          } else if (event.detail == SWT.TRAVERSE_MNEMONIC) {
-            if ((mnemonic != - 1)
-                && (Character.toLowerCase(event.character) == mnemonic)) {
-              setFocus();
-              linkActivated();
-              event.doit = false;
-            } else {
-              event.doit = true;
-            }
           } else {
             event.doit = true; // Accept all other traversal keys
           }
@@ -241,18 +231,6 @@ public class HyperlinkLabel extends Canvas {
         public void handleEvent(Event event) {
           // System.out.println("FocusOut");
           redraw();
-        }
-      });
-    } else // Don't take focus but still support mnemonics
-    {
-      addListener(SWT.Traverse, new Listener() {
-        @Override
-        public void handleEvent(Event event) {
-          if ((event.detail == SWT.TRAVERSE_MNEMONIC) && (mnemonic != - 1)
-              && (Character.toLowerCase(event.character) == mnemonic)) {
-            linkActivated();
-            event.doit = false;
-          }
         }
       });
     }
@@ -526,12 +504,6 @@ public class HyperlinkLabel extends Canvas {
     }
     if (! text.equals(this.text)) {
       this.text = text;
-      final int i = text.indexOf('&');
-      if ((i == - 1) || (i == (text.length() - 1))) {
-        mnemonic = - 1;
-      } else {
-        mnemonic = Character.toLowerCase(text.charAt(i + 1));
-      }
       redraw();
     }
   }

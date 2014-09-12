@@ -8,7 +8,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Haixing Hu (starfish.hu at gmail dot com) - Initial implementation and API.
+ *     Haixing Hu (https://github.com/Haixing-Hu/) - Initial implementation and API.
  *
  ******************************************************************************/
 

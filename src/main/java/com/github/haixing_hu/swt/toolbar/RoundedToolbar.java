@@ -7,7 +7,7 @@
  *
  * Contributors:
  *  Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
- *  Haixing Hu (starfish.hu at gmail dot com)  - Modification for personal use.
+ *  Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
 package com.github.haixing_hu.swt.toolbar;
 

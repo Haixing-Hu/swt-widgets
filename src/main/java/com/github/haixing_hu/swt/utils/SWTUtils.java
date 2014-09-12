@@ -8,13 +8,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Haixing Hu (starfish.hu at gmail dot com) - Initial implementation and API.
+ *     Haixing Hu (https://github.com/Haixing-Hu/) - Initial implementation and API.
  *
  ******************************************************************************/
 
 package com.github.haixing_hu.swt.utils;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import org.eclipse.swt.custom.StyledText;
@@ -38,6 +41,55 @@ public final class SWTUtils {
 
   private SWTUtils() {
     // empty
+  }
+
+  /**
+   * Opens an URI with the operating system's default application.
+   * <p>
+   * If the URI is a URL, this function will launch the default browser to
+   * display the webpage at the specified URL; if the URI has a "mailto:"
+   * schema, this function will launch the mail composing window of the user
+   * default mail client, filling the message fields specified by the
+   * "mailto:" URI.
+   *
+   * @param uri
+   *    A specified URI represented as a string.
+   */
+  public static void openUri(String uri) {
+    try {
+      openUri(new URI(uri));
+    } catch (final URISyntaxException e) {
+      LOGGER.error("Cannot open the invalid URI: {}", uri);
+    }
+  }
+
+  /**
+   * Opens an URI with the operating system's default application.
+   * <p>
+   * If the URI is a URL, this function will launch the default browser to
+   * display the webpage at the specified URL; if the URI has a "mailto:"
+   * schema, this function will launch the mail composing window of the user
+   * default mail client, filling the message fields specified by the
+   * "mailto:" URI.
+   *
+   * @param uri
+   *    A specified URI.
+   */
+  public static void openUri(URI uri) {
+    if (Desktop.isDesktopSupported()) {
+      LOGGER.error("The java.awt.Desktop is not supported. Ignore the action.");
+      return;
+    }
+    final Desktop desktop = Desktop.getDesktop();
+    try {
+      if ("mailto".equals(uri.getScheme())) {
+        desktop.mail(uri);
+      } else {
+        desktop.browse(uri);
+      }
+    } catch (final IOException e) {
+      LOGGER.error("An error occurred while opening the URI: {}", uri, e);
+    }
   }
 
   /**

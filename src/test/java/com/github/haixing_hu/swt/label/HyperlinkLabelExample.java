@@ -8,19 +8,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Haixing Hu (starfish.hu at gmail dot com) - Initial implementation and API.
+ *     Haixing Hu (https://github.com/Haixing-Hu/) - Initial implementation and API.
  *
  ******************************************************************************/
 
 package com.github.haixing_hu.swt.label;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.github.haixing_hu.lang.DesktopApi;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
@@ -50,7 +53,16 @@ public class HyperlinkLabelExample {
         SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
     link1.setText("szeiger@novocode.com");
     link1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
+    link1.addSelectionListener(new SelectionListener() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        DesktopApi.mail(link1.getText());
+      }
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+        DesktopApi.mail(link1.getText());
+      }
+    });
 
     final Label label2 = new Label(shell, SWT.NONE);
     label2.setText("Google: ");
@@ -60,7 +72,16 @@ public class HyperlinkLabelExample {
         SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
     link2.setText("https://www.google.com");
     link2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-
+    link2.addSelectionListener(new SelectionListener() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        DesktopApi.open(link2.getText());
+      }
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+        DesktopApi.open(link2.getText());
+      }
+    });
 
     SWTUtils.centerShell(shell);
     shell.open();
