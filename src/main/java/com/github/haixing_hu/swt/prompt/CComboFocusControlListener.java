@@ -30,7 +30,7 @@ class CComboFocusControlListener extends BaseFocusControlListener {
 
   @Override
   protected void hidePrompt() {
-    ((CCombo) control).setText(EMPTY_STRING);
+    ((CCombo) control).setText("");
   }
 
   @Override
@@ -52,7 +52,7 @@ class CComboFocusControlListener extends BaseFocusControlListener {
         && promptText.equals(((CCombo) control).getText().trim())) {
       return false;
     }
-    return ! EMPTY_STRING.equals(((CCombo) control).getText().trim());
+    return ((CCombo) control).getText().trim().length() > 0;
   }
 
 }

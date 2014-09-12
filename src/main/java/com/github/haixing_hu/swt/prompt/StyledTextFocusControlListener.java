@@ -31,7 +31,7 @@ class StyledTextFocusControlListener extends BaseFocusControlListener {
 
   @Override
   protected void hidePrompt() {
-    ((StyledText) control).setText(EMPTY_STRING);
+    ((StyledText) control).setText("");
   }
 
   @Override
@@ -61,7 +61,7 @@ class StyledTextFocusControlListener extends BaseFocusControlListener {
         && promptText.equals(((StyledText) control).getText().trim())) {
       return false;
     }
-    return ! EMPTY_STRING.equals(((StyledText) control).getText().trim());
+    return ((StyledText) control).getText().trim().length() > 0;
   }
 
 }

@@ -22,6 +22,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -52,17 +53,20 @@ import com.github.haixing_hu.swt.utils.SWTResourceManager;
  */
 public class RoundedToolbar extends Canvas {
 
+  public static final int DEFAULT_CORNER_RADIUS = 8;
+
+  public static final RGB DEFAULT_START_GRADIENT_COLOR = new RGB(245, 245, 245);
+
+  public static final RGB DEFAULT_END_GRADIENT_COLOR = new RGB(185, 185, 185);
+
+  public static final RGB DEFAULT_BORDER_COLOR = new RGB(66, 66, 66);
+
   private final List<RoundedToolItem> items;
   private boolean multiSelection;
   private int cornerRadius;
-  private static Color START_GRADIENT_COLOR_DEFAULT = SWTResourceManager
-      .getColor(245, 245, 245);
-  private static Color END_GRADIENT_COLOR_DEFAULT = SWTResourceManager
-      .getColor(185, 185, 185);
-  static Color BORDER_COLOR = SWTResourceManager.getColor(66, 66, 66);
-
-  private Color START_GRADIENT_COLOR = START_GRADIENT_COLOR_DEFAULT;
-  private Color END_GRADIENT_COLOR = END_GRADIENT_COLOR_DEFAULT;
+  private final Color startGradientColor;
+  private final Color endGradientColor;
+  private final Color borderColor;
 
   /**
    * Constructs a new instance of this class given its parent and a style value
@@ -97,10 +101,47 @@ public class RoundedToolbar extends Canvas {
    * @see Widget#getStyle()
    */
   public RoundedToolbar(final Composite parent, final int style) {
-    super(parent, style | SWT.DOUBLE_BUFFERED);
-    items = new ArrayList<RoundedToolItem>();
-    cornerRadius = 2;
-    addListeners();
+    this(parent, style, DEFAULT_CORNER_RADIUS, DEFAULT_START_GRADIENT_COLOR,
+        DEFAULT_END_GRADIENT_COLOR, DEFAULT_BORDER_COLOR);
+  }
+
+
+  /**
+   * Constructs a new instance of this class given its parent and a style value
+   * describing its behavior and appearance.
+   * <p>
+   * The style value is either one of the style constants defined in class
+   * <code>SWT</code> which is applicable to instances of this class, or must be
+   * built by <em>bitwise OR</em>'ing together (that is, using the
+   * <code>int</code> "|" operator) two or more of those <code>SWT</code> style
+   * constants. The class description lists the style constants that are
+   * applicable to the class. Style bits are also inherited from superclasses.
+   * </p>
+   *
+   * @param parent
+   *          a composite control which will be the parent of the new instance
+   *          (cannot be null)
+   * @param style
+   *          the style of control to construct.
+   * @param cornerRadius
+   *          the radius of the rounded corner.
+   * @exception IllegalArgumentException
+   *              <ul>
+   *              <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
+   *              </ul>
+   * @exception SWTException
+   *              <ul>
+   *              <li>ERROR_THREAD_INVALID_ACCESS - if not called from the
+   *              thread that created the parent</li>
+   *              <li>ERROR_INVALID_SUBCLASS - if this class is not an allowed
+   *              subclass</li>
+   *              </ul>
+   *
+   * @see Widget#getStyle()
+   */
+  public RoundedToolbar(final Composite parent, final int style, int cornerRadius) {
+    this(parent, style, cornerRadius, DEFAULT_START_GRADIENT_COLOR,
+        DEFAULT_END_GRADIENT_COLOR, DEFAULT_BORDER_COLOR);
   }
 
   /**
@@ -120,8 +161,15 @@ public class RoundedToolbar extends Canvas {
    *          a composite control which will be the parent of the new instance
    *          (cannot be null)
    * @param style
-   *          the style of control to construct
-   *
+   *          the style of control to construct.
+   * @param cornerRadius
+   *          the radius of the rounded corner.
+   * @param startGradientColor
+   *          the RGB of the gradient start color.
+   * @param endGradientColor
+   *          the RGB of the gradient end color.
+   * @param borderColor
+   *          the RGB of the border color.
    * @exception IllegalArgumentException
    *              <ul>
    *              <li>ERROR_NULL_ARGUMENT - if the parent is null</li>
@@ -136,14 +184,15 @@ public class RoundedToolbar extends Canvas {
    *
    * @see Widget#getStyle()
    */
-  public RoundedToolbar(final Composite parent, final int style,
-      Color startGradientColor, Color endGradientColor) {
+  public RoundedToolbar(final Composite parent, final int style, int cornerRadius,
+      RGB startGradientColor, RGB endGradientColor, RGB borderColor) {
     super(parent, style | SWT.DOUBLE_BUFFERED);
     items = new ArrayList<RoundedToolItem>();
-    cornerRadius = 2;
+    this.cornerRadius = cornerRadius;
+    this.startGradientColor = SWTResourceManager.getColor(startGradientColor);
+    this.endGradientColor = SWTResourceManager.getColor(endGradientColor);
+    this.borderColor = SWTResourceManager.getColor(borderColor);
     addListeners();
-    START_GRADIENT_COLOR = startGradientColor;
-    END_GRADIENT_COLOR = endGradientColor;
   }
 
   private void addListeners() {
@@ -221,14 +270,6 @@ public class RoundedToolbar extends Canvas {
   }
 
   /**
-   * @return the corner radius
-   */
-  public int getCornerRadius() {
-    checkWidget();
-    return cornerRadius;
-  }
-
-  /**
    * Returns the item at the given, zero-relative index in the receiver. Throws
    * an exception if the index is out of range.
    *
@@ -298,7 +339,6 @@ public class RoundedToolbar extends Canvas {
    *              </ul>
    */
   public int getItemCount() {
-    checkWidget();
     return items.size();
   }
 
@@ -352,15 +392,6 @@ public class RoundedToolbar extends Canvas {
   }
 
   /**
-   * @return <code>true</code> if the toolbar is in multiselection mode,
-   *         <code>false</code> otherwise
-   */
-  public boolean isMultiselection() {
-    checkWidget();
-    return multiSelection;
-  }
-
-  /**
    * Paint the component
    *
    * @param e
@@ -389,14 +420,12 @@ public class RoundedToolbar extends Canvas {
     path.addRoundRectangle(0, 0, width, height, cornerRadius, cornerRadius);
     gc.setClipping(path);
 
-    gc.setForeground(START_GRADIENT_COLOR);
-    gc.setBackground(END_GRADIENT_COLOR);
+    gc.setForeground(startGradientColor);
+    gc.setBackground(endGradientColor);
     gc.fillGradientRectangle(0, 0, width, height, true);
-
-    gc.setForeground(BORDER_COLOR);
+    gc.setForeground(borderColor);
     gc.drawRoundRectangle(0, 0, width - 1, height - 1, cornerRadius,
         cornerRadius);
-
     gc.setClipping((Rectangle) null);
   }
 
@@ -412,20 +441,62 @@ public class RoundedToolbar extends Canvas {
   }
 
   /**
+   * @return the corner radius
+   */
+  public int getCornerRadius() {
+    return cornerRadius;
+  }
+
+
+  /**
    * @param cornerRadius
    *          new corner radius
    */
   public void setCornerRadius(final int cornerRadius) {
-    checkWidget();
     this.cornerRadius = cornerRadius;
   }
+
+  /**
+   * Gets the startGradientColor.
+   *
+   * @return the startGradientColor.
+   */
+  public Color getStartGradientColor() {
+    return startGradientColor;
+  }
+
+  /**
+   * Gets the endGradientColor.
+   *
+   * @return the endGradientColor.
+   */
+  public Color getEndGradientColor() {
+    return endGradientColor;
+  }
+
+  /**
+   * Gets the borderColor.
+   *
+   * @return the borderColor.
+   */
+  public Color getBorderColor() {
+    return borderColor;
+  }
+
+  /**
+   * @return <code>true</code> if the toolbar is in multiselection mode,
+   *         <code>false</code> otherwise
+   */
+  public boolean isMultiselection() {
+    return multiSelection;
+  }
+
 
   /**
    * @param multiSelection
    *          new value of the multi selection flag
    */
   public void setMultiselection(final boolean multiSelection) {
-    checkWidget();
     this.multiSelection = multiSelection;
   }
 

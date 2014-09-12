@@ -34,8 +34,6 @@ abstract class BaseFocusControlListener implements FocusListener, ControlListene
 	private Color initialBackgroundColor;
 	private Color initialForegroundColor;
 
-	protected static final String EMPTY_STRING = "";
-
 	/**
 	 * Constructor
 	 *
