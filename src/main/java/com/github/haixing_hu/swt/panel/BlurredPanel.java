@@ -33,8 +33,9 @@ import com.github.haixing_hu.swt.utils.SWTUtils;
  * display a blurred version of the content of the shell
  */
 public class BlurredPanel {
+  private static final String BLURED_PANEL_KEY = BlurredPanel.class.getName();
+
   private final Shell parent;
-  private static final String BLURED_PANEL_KEY = "org.mihalis.opal.Panels.DarkPanel";
   private int radius;
   private Shell panel;
   private Canvas canvas;
@@ -64,7 +65,6 @@ public class BlurredPanel {
     if (shell.isDisposed()) {
       SWT.error(SWT.ERROR_INVALID_ARGUMENT);
     }
-
     parent = shell;
     if (shell.getData(BLURED_PANEL_KEY) != null) {
       throw new IllegalArgumentException(

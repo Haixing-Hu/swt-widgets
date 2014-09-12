@@ -28,8 +28,9 @@ import org.eclipse.swt.widgets.Shell;
  * display a dark panel on this shell
  */
 public class DarkPanel {
+  private static final String DARK_PANEL_KEY = DarkPanel.class.getName();
+
   private final Shell parent;
-  private static final String DARK_PANEL_KEY = "org.mihalis.opal.BluredPanel.DarkPanel";
   private int alpha;
   private Shell panel;
   private Canvas canvas;

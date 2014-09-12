@@ -503,8 +503,8 @@ public class SWTResourceManager {
    * Returns a bold version of the given {@link Font}.
    *
    * @param baseFont
-   *          the {@link Font} for which a bold version is desired
-   * @return the bold version of the given {@link Font}
+   *          the {@link Font} for which a bold version is desired.
+   * @return the bold version of the given {@link Font}.
    */
   public static Font getBoldFont(Font baseFont) {
     final FontData fontDatas[] = baseFont.getFontData();
@@ -521,8 +521,8 @@ public class SWTResourceManager {
    * Returns a italic version of the given {@link Font}.
    *
    * @param baseFont
-   *          the {@link Font} for which a bold version is desired
-   * @return the italic version of the given {@link Font}
+   *          the {@link Font} for which a bold version is desired.
+   * @return the italic version of the given {@link Font}.
    */
   public static Font getItalicFont(Font baseFont) {
     final FontData fontDatas[] = baseFont.getFontData();
@@ -539,8 +539,8 @@ public class SWTResourceManager {
    * Returns a normal version of the given {@link Font}.
    *
    * @param baseFont
-   *          the {@link Font} for which a normal version is desired
-   * @return the normal version of the given {@link Font}
+   *          the {@link Font} for which a normal version is desired.
+   * @return the normal version of the given {@link Font}.
    */
   public static Font getNormalFont(Font baseFont) {
     final FontData fontDatas[] = baseFont.getFontData();
@@ -554,7 +554,29 @@ public class SWTResourceManager {
   }
 
   /**
-   * Changes the size of a given {@link Font}.
+   * Changes the style of a given {@link Font} and returns a new font.
+   *
+   * @param baseFont
+   *          the {@link Font} based on which the new font is created.
+   * @param style
+   *          the style of the new font.
+   * @param strikeout
+   *          the strikeout flag (warning: Windows only) of the new font.
+   * @param underline
+   *          the underline flag (warning: Windows only) of the new font.
+   * @return the new font based on the given {@link Font} with the specified style.
+   */
+  public static Font changeFontStyle(Font baseFont, int style,
+      boolean strikeout, boolean underline) {
+    final FontData fontDatas[] = baseFont.getFontData();
+    final FontData data = fontDatas[0];
+    final String name = data.getName();
+    final int height = data.getHeight();
+    return getFont(name, height, style, strikeout, underline);
+  }
+
+  /**
+   * Changes the size of a given {@link Font} and returns a new font.
    *
    * @param baseFont
    *    the {@link Font} whose size is to be changed.
@@ -574,7 +596,29 @@ public class SWTResourceManager {
               (style & UNDERLINE) != 0);
   }
 
-
+  /**
+   * Adjusts the size of a given {@link Font} and returns a new font.
+   *
+   * @param baseFont
+   *    the {@link Font} whose size is to be changed.
+   * @param sizeDiff
+   *    the difference between the new size and the old size, that is, the
+   *    new size of the new font should be (oldSize + sizeDiff). Note that this
+   *    argument could be negative.
+   * @return
+   *    a new {@link Font} object whose name and style is the same as the base
+   *    fond and whose size is the specified new size.
+   */
+  public static Font adjustFontSize(Font baseFont, int sizeDiff) {
+    final FontData fontDatas[] = baseFont.getFontData();
+    final FontData data = fontDatas[0];
+    final String name = data.getName();
+    final int size = data.getHeight();
+    final int style = data.getStyle();
+    return getFont(name, size + sizeDiff, style,
+              (style & STRIKEOUT) != 0,
+              (style & UNDERLINE) != 0);
+  }
 
   /**
    * Dispose all of the cached {@link Font}'s.
