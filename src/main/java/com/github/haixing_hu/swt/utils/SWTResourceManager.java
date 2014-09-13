@@ -931,6 +931,60 @@ public class SWTResourceManager {
         (style & UNDERLINE) != 0);
   }
 
+
+  /**
+   * Adjusts the size and style of a given {@link Font} and returns a new font.
+   *
+   * @param baseFont
+   *          the {@link Font} whose size is to be changed.
+   * @param sizeDiff
+   *          the difference between the new size and the old size, that is, the
+   *          new size of the new font should be (oldSize + sizeDiff). Note that
+   *          this argument could be negative.
+   * @param style
+   *          the style of the new font.
+   * @param strikeout
+   *          the strikeout flag of the new font (warning: Windows only).
+   * @param underline
+   *          the underline flag of the new font (warning: Windows only).
+   * @return a new {@link Font} object whose name and style is the same as the
+   *         base fond and whose size is the specified new size.
+   */
+  public static Font adjustFont(Font baseFont, int sizeDiff, int style,
+      boolean strikeout, boolean underline) {
+    return adjustFont(Display.getCurrent(), baseFont, sizeDiff, style,
+        strikeout, underline);
+  }
+
+  /**
+   * Adjusts the size of a given {@link Font} and returns a new font.
+   *
+   * @param display
+   *          a specified display.
+   * @param baseFont
+   *          the {@link Font} whose size is to be changed.
+   * @param sizeDiff
+   *          the difference between the new size and the old size, that is, the
+   *          new size of the new font should be (oldSize + sizeDiff). Note that
+   *          this argument could be negative.
+   * @param style
+   *          the style of the new font.
+   * @param strikeout
+   *          the strikeout flag of the new font (warning: Windows only).
+   * @param underline
+   *          the underline flag of the new font (warning: Windows only).
+   * @return a new {@link Font} object whose name and style is the same as the
+   *         base fond and whose size is the specified new size.
+   */
+  public static Font adjustFont(Display display, Font baseFont, int sizeDiff,
+      int style, boolean strikeout, boolean underline) {
+    final FontData fontDatas[] = baseFont.getFontData();
+    final FontData data = fontDatas[0];
+    final String name = data.getName();
+    final int size = data.getHeight();
+    return getFont(display, name, size + sizeDiff, style, strikeout, underline);
+  }
+
   /**
    * Dispose all of the cached {@link Font}'s.
    */

@@ -16,7 +16,6 @@ import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
@@ -171,7 +170,7 @@ public class Header extends Composite {
     initFontAndColors(titleFontSizeDiff, titleFontStyle, titleFontColor,
         gradientStartColor, gradientEndColor, separatorColor);
     setBackgroundMode(SWT.INHERIT_FORCE);
-    this.addListener(SWT.Resize, new Listener() {
+    addListener(SWT.Resize, new Listener() {
       @Override
       public void handleEvent(final Event event) {
         redrawComposite();
@@ -182,20 +181,13 @@ public class Header extends Composite {
   private void initFontAndColors(int titleFontSizeDiff, int titleFontStyle,
       RGB titleFontColor, RGB gradientStartColor, RGB gradientEndColor,
       RGB separatorColor) {
-    Font font = null;
-    final FontData[] fontData = getFont().getFontData();
-    if ((fontData != null) && (fontData.length > 0)) {
-      final FontData fd = fontData[0];
-      font = SWTResourceManager.getFont(fd.getName(),
-          fd.getHeight() + titleFontSizeDiff, titleFontStyle);
-    } else {
-      font = null;
-    }
-    this.titleFont = font;
-    this.titleColor = SWTResourceManager.getColor(titleFontColor);
-    this.gradientStart = SWTResourceManager.getColor(gradientStartColor);
-    this.gradientEnd = SWTResourceManager.getColor(gradientEndColor);
-    this.separatorColor = SWTResourceManager.getColor(separatorColor);
+    final Display display = getDisplay();
+    titleFont = SWTResourceManager.adjustFont(display, getFont(),
+        titleFontSizeDiff, titleFontStyle, false, false);
+    titleColor = SWTResourceManager.getColor(display, titleFontColor);
+    gradientStart = SWTResourceManager.getColor(display, gradientStartColor);
+    gradientEnd = SWTResourceManager.getColor(display, gradientEndColor);
+    this.separatorColor = SWTResourceManager.getColor(display, separatorColor);
   }
 
   /**
@@ -203,12 +195,12 @@ public class Header extends Composite {
    */
   private void redrawComposite() {
     // Dispose previous content
-    for (final Control c : this.getChildren()) {
+    for (final Control c : getChildren()) {
       c.dispose();
     }
 
     int numberOfColumns = 1;
-    if (this.image != null) {
+    if (image != null) {
       numberOfColumns++;
     }
 
@@ -221,15 +213,15 @@ public class Header extends Composite {
    * Create the content (title, image, description)
    */
   private void createContent() {
-    if (this.title != null) {
+    if (title != null) {
       createTitle();
     }
 
-    if (this.image != null) {
+    if (image != null) {
       createImage();
     }
 
-    if (this.description != null) {
+    if (description != null) {
       createDescription();
     }
   }
@@ -241,9 +233,9 @@ public class Header extends Composite {
     final Label labelTitle = new Label(this, SWT.NONE);
     labelTitle.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING,
         true, false));
-    labelTitle.setFont(this.titleFont);
-    labelTitle.setForeground(this.titleColor);
-    labelTitle.setText(this.title);
+    labelTitle.setFont(titleFont);
+    labelTitle.setForeground(titleColor);
+    labelTitle.setText(title);
   }
 
   /**
@@ -252,13 +244,13 @@ public class Header extends Composite {
   private void createImage() {
 
     int numberOfLines = 1;
-    if ((this.title != null) && (this.description != null)) {
+    if ((title != null) && (description != null)) {
       numberOfLines++;
     }
     final Label labelImage = new Label(this, SWT.NONE);
     labelImage.setLayoutData(new GridData(GridData.FILL, GridData.BEGINNING,
         false, true, 1, numberOfLines));
-    labelImage.setImage(this.image);
+    labelImage.setImage(image);
   }
 
   /**
@@ -272,7 +264,7 @@ public class Header extends Composite {
     labelDescription.setEnabled(false);
     labelDescription.setFont(getFont());
     labelDescription.setForeground(getForeground());
-    labelDescription.setText(this.description);
+    labelDescription.setText(description);
     SWTUtils.applyHTMLFormating(labelDescription);
   }
 
@@ -280,28 +272,28 @@ public class Header extends Composite {
    * Draw the background (a gradient+a separator)
    */
   private void drawBackground() {
-    final Display display = this.getDisplay();
-    final Rectangle rect = this.getClientArea();
+    final Display display = getDisplay();
+    final Rectangle rect = getClientArea();
     final Image newImage = new Image(display, Math.max(1, rect.width),
         Math.max(1, rect.height));
 
     final GC gc = new GC(newImage);
-    gc.setForeground(this.gradientStart);
-    gc.setBackground(this.gradientEnd);
+    gc.setForeground(gradientStart);
+    gc.setBackground(gradientEnd);
 
     gc.fillGradientRectangle(rect.x, rect.y, rect.width, rect.height, false);
 
-    gc.setForeground(this.separatorColor);
+    gc.setForeground(separatorColor);
     gc.drawLine(rect.x, (rect.y + rect.height) - 1, rect.x + rect.width,
         (rect.y + rect.height) - 1);
 
     gc.dispose();
 
-    this.setBackgroundImage(newImage);
-    if (this.previousGeneratedImage != null) {
-      this.previousGeneratedImage.dispose();
+    setBackgroundImage(newImage);
+    if (previousGeneratedImage != null) {
+      previousGeneratedImage.dispose();
     }
-    this.previousGeneratedImage = newImage;
+    previousGeneratedImage = newImage;
   }
 
   /**
@@ -328,7 +320,7 @@ public class Header extends Composite {
    */
   public String getDescription() {
     checkWidget();
-    return this.description;
+    return description;
   }
 
   /**
@@ -345,7 +337,7 @@ public class Header extends Composite {
    */
   public Color getGradientEnd() {
     checkWidget();
-    return this.gradientEnd;
+    return gradientEnd;
   }
 
   /**
@@ -362,7 +354,7 @@ public class Header extends Composite {
    */
   public Color getGradientStart() {
     checkWidget();
-    return this.gradientStart;
+    return gradientStart;
   }
 
   /**
@@ -379,7 +371,7 @@ public class Header extends Composite {
    */
   public Image getImage() {
     checkWidget();
-    return this.image;
+    return image;
   }
 
   /**
@@ -396,7 +388,7 @@ public class Header extends Composite {
    */
   public Color getSeparatorColor() {
     checkWidget();
-    return this.separatorColor;
+    return separatorColor;
   }
 
   /**
@@ -413,7 +405,7 @@ public class Header extends Composite {
    */
   public String getTitle() {
     checkWidget();
-    return this.title;
+    return title;
   }
 
   /**
@@ -430,7 +422,7 @@ public class Header extends Composite {
    */
   public Color getTitleColor() {
     checkWidget();
-    return this.titleColor;
+    return titleColor;
   }
 
   /**
@@ -447,7 +439,7 @@ public class Header extends Composite {
    */
   public Font getTitleFont() {
     checkWidget();
-    return this.titleFont;
+    return titleFont;
   }
 
   /**
@@ -603,7 +595,7 @@ public class Header extends Composite {
    */
   public void setTitleColor(final Color headerColor) {
     checkWidget();
-    this.titleColor = headerColor;
+    titleColor = headerColor;
   }
 
   /**
@@ -625,7 +617,7 @@ public class Header extends Composite {
    */
   public void setTitleFont(final Font headerFont) {
     checkWidget();
-    this.titleFont = headerFont;
+    titleFont = headerFont;
   }
 
 }

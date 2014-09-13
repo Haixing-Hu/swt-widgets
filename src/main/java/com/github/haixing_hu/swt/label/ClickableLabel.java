@@ -61,7 +61,6 @@ public class ClickableLabel extends Label {
     //  of Label.
   }
 
-
   /**
    * Adds the listener to receive the selection (click) events.
    *

@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
- * A simple snippet for the Rounded Toolbar Widget
+ * A simple snippet for the {@link RoundedToolbar} widget.
  */
 public class RoundedToolbarExample {
 

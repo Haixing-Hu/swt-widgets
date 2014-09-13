@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.utils.SWTUtils;
+import com.github.haixing_hu.swt.utils.SWTGraphicUtils;
 
 /**
  * Instances of this class are controls located on the top of a shell. They
@@ -126,7 +126,7 @@ public class BlurredPanel {
     final GC gc = new GC(parent);
     gc.copyArea(image, 0, 0);
     gc.dispose();
-    final ImageData data = SWTUtils.blur(image.getImageData(), radius);
+    final ImageData data = SWTGraphicUtils.blur(image.getImageData(), radius);
     image.dispose();
     return new Image(display, data);
   }
