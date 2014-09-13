@@ -744,7 +744,8 @@ public class SWTResourceManager {
     final String name = data.getName();
     final int height = data.getHeight();
     final int style = data.getStyle();
-    return getFont(display, name, height, SWT.BOLD, (style & STRIKEOUT) != 0,
+    return getFont(display, name, height, style | SWT.BOLD,
+        (style & STRIKEOUT) != 0,
         (style & UNDERLINE) != 0);
   }
 
@@ -774,7 +775,8 @@ public class SWTResourceManager {
     final String name = data.getName();
     final int height = data.getHeight();
     final int style = data.getStyle();
-    return getFont(display, name, height, SWT.ITALIC, (style & STRIKEOUT) != 0,
+    return getFont(display, name, height, style | SWT.ITALIC,
+        (style & STRIKEOUT) != 0,
         (style & UNDERLINE) != 0);
   }
 
@@ -804,7 +806,8 @@ public class SWTResourceManager {
     final String name = data.getName();
     final int height = data.getHeight();
     final int style = data.getStyle();
-    return getFont(display, name, height, SWT.NORMAL, (style & STRIKEOUT) != 0,
+    return getFont(display, name, height, SWT.NORMAL,
+        (style & STRIKEOUT) != 0,
         (style & UNDERLINE) != 0);
   }
 

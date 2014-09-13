@@ -28,6 +28,7 @@ Currently the following widgets are supported.
 - [PromptSupport](https://github.com/Haixing-Hu/swt-widgets/wiki/PromptSupport)
 - [RoundedToolbar](https://github.com/Haixing-Hu/swt-widgets/wiki/RoundedToolbar)
 - [HyperlinkLabel](https://github.com/Haixing-Hu/swt-widgets/wiki/HyperlinkLabel)
+- [ClickableLabel](https://github.com/Haixing-Hu/swt-widgets/wiki/ClickableLabel)
 - [BalloonWindow](https://github.com/Haixing-Hu/swt-widgets/wiki/BalloonWindow)
 
 ## References
