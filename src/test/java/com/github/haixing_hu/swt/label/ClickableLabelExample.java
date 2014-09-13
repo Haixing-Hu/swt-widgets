@@ -20,66 +20,41 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.lang.DesktopApi;
+import com.github.haixing_hu.swt.dialog.Dialog;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
 /**
- * This snippet demonstrates the {@link HyperlinkLabel} widget.
+ * This snippet demonstrates the {@link ClickableLabel} widget.
  *
  * @author Haixing Hu
  */
-public class HyperlinkLabelExample {
+public class ClickableLabelExample {
 
-  /**
-   * @param args
-   */
   public static void main(final String[] args) {
     final Display display = new Display();
     final Shell shell = new Shell(display);
 
-    shell.setText("HyperlinkLabel Example");
+    shell.setText("ClickableLabel Example");
     shell.setLayout(new GridLayout(2, false));
     shell.setSize(640, 350);
 
-    final Label label1 = new Label(shell, SWT.NONE);
-    label1.setText("Contact me at ");
-    label1.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-
-    final HyperlinkLabel link1 = new HyperlinkLabel(shell,
-        SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
-    link1.setText("szeiger@novocode.com");
-    link1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-    link1.addSelectionListener(new SelectionListener() {
+    final ClickableLabel label = new ClickableLabel(shell, SWT.NONE);
+    label.setText("Click this label to display a balloon window.");
+    label.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
+    label.addSelectionListener(new SelectionListener() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        DesktopApi.mail(link1.getText());
+        onClick();
       }
       @Override
       public void widgetDefaultSelected(SelectionEvent e) {
-        DesktopApi.mail(link1.getText());
+        onClick();
       }
-    });
-
-    final Label label2 = new Label(shell, SWT.NONE);
-    label2.setText("Google: ");
-    label2.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false));
-
-    final HyperlinkLabel link2 = new HyperlinkLabel(shell,
-        SWT.SINGLE | SWT.BORDER | SWT.NO_FOCUS);
-    link2.setText("https://www.google.com");
-    link2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-    link2.addSelectionListener(new SelectionListener() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        DesktopApi.open(link2.getText());
-      }
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-        DesktopApi.open(link2.getText());
+      private void onClick() {
+        Dialog.inform("Click Event", "The label has been clicked.");
       }
     });
 
@@ -93,4 +68,5 @@ public class HyperlinkLabelExample {
     SWTResourceManager.dispose();
     display.dispose();
   }
+
 }
