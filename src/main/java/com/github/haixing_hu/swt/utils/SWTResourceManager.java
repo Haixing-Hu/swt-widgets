@@ -61,6 +61,8 @@ public class SWTResourceManager {
   // //////////////////////////////////////////////////////////////////////////
   private static Map<RGB, Color> colorCache = new HashMap<RGB, Color>();
 
+  private static final int MISSING_IMAGE_SIZE = 10;
+
   /**
    * Gets the system {@link Color} matching the specific ID.
    *
@@ -326,17 +328,33 @@ public class SWTResourceManager {
     return image;
   }
 
-  private static final int MISSING_IMAGE_SIZE = 10;
+  /**
+   * Gets the placeholder image for missing image with the default width and
+   * height.
+   *
+   * @return the {@link Image} that can be used as placeholder for missing
+   *         image. Note that the returned image is not cached by the resource
+   *         manager, therefore it should be disposed by the function caller.
+   */
+  public static Image getMissingImage() {
+    return getMissingImage(MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
+  }
 
   /**
-   * @return the small {@link Image} that can be used as placeholder for missing
-   *         image.
+   * Gets the placeholder image for missing image.
+   *
+   * @param width
+   *          the width of the missing image.
+   * @param height
+   *          the height of the missing image.
+   * @return the {@link Image} that can be used as placeholder for missing
+   *         image. Note that the returned image is not cached by the resource
+   *         manager, therefore it should be disposed by the function caller.
    */
-  private static Image getMissingImage() {
-    final Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE,
-        MISSING_IMAGE_SIZE);
+  public static Image getMissingImage(int width, int height) {
+    final Image image = new Image(Display.getCurrent(), width, height);
     final GC gc = new GC(image);
-    gc.setBackground(getColor(SWT.COLOR_RED));
+    gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
     gc.fillRectangle(0, 0, MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
     gc.dispose();
     return image;

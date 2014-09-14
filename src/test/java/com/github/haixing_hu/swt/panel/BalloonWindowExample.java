@@ -17,7 +17,6 @@ package com.github.haixing_hu.swt.panel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,17 +34,55 @@ import com.github.haixing_hu.swt.utils.SWTUtils;
  */
 public class BalloonWindowExample {
 
-  public static void main(String[] args)
-  {
+  public static void main(String[] args) {
+
     final Display display = new Display();
     final Shell shell = new Shell(display);
     shell.setText("BalloonWindow Example");
-    shell.setLayout(new GridLayout(2, false));
-    shell.setSize(340, 250);
+    shell.setLayout(new GridLayout(1, false));
+    shell.setSize(640, 350);
     SWTUtils.centerShell(shell);
 
+    createButton(shell, SWT.NONE);
+    createButton(shell, SWT.LEFT | SWT.TOP);
+    createButton(shell, SWT.RIGHT | SWT.TOP);
+    createButton(shell, SWT.LEFT | SWT.BOTTOM);
+    createButton(shell, SWT.RIGHT | SWT.BOTTOM);
+
+    shell.open();
+    while (!shell.isDisposed()) {
+      if (!display.readAndDispatch()) {
+        display.sleep();
+      }
+    }
+    SWTResourceManager.dispose();
+    display.dispose();
+  }
+
+  private static String anchorToString(int anchor) {
+    final StringBuilder builder = new StringBuilder();
+    if ((anchor & SWT.TOP) != 0) {
+      builder.append(" | SWT.TOP");
+    }
+    if ((anchor & SWT.LEFT) != 0) {
+      builder.append(" | SWT.LEFT");
+    }
+    if ((anchor & SWT.BOTTOM) != 0) {
+      builder.append(" | SWT.BOTTOM");
+    }
+    if ((anchor & SWT.RIGHT) != 0) {
+      builder.append(" | SWT.RIGHT");
+    }
+    if (builder.length() > 0) {
+      return builder.substring(2);
+    } else {
+      return "SWT.NONE";
+    }
+  }
+
+  private static void createButton(final Shell shell, final int anchor) {
     final Button button = new Button(shell, SWT.NONE);
-    button.setText("Click this button to show a balloon window.");
+    button.setText("BalloonWindows's anchor is: " + anchorToString(anchor));
     button.addSelectionListener(new SelectionListener() {
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -59,31 +96,20 @@ public class BalloonWindowExample {
         System.err.println("Button clicked.");
         //  we should recompute the location of the label before show the balloon
         //  window
-        final BalloonWindow bw = createBalloonWindow(shell.getDisplay());
+        final BalloonWindow bw = createBalloonWindow(shell, anchor);
         final Point loc = button.toDisplay(button.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         bw.setLocation(loc);
         bw.open();
       }
     });
-
-    shell.open();
-    while (!shell.isDisposed()) {
-      if (!display.readAndDispatch()) {
-        display.sleep();
-      }
-    }
-    SWTResourceManager.dispose();
-    display.dispose();
   }
 
-  private static BalloonWindow createBalloonWindow(Display display) {
+  private static BalloonWindow createBalloonWindow(Shell shell, int anchor) {
     final int style =  SWT.ON_TOP | SWT.TITLE | SWT.CLOSE;
-    final BalloonWindow bw = new BalloonWindow(display, style);
+    final BalloonWindow bw = new BalloonWindow(shell, style);
     bw.setTitleText("This is the title text");
-    final Image img = SWTResourceManager.getImage(display,
-        BalloonWindowExample.class, "/images/warning.png");
-    bw.setTitleImage(img);
-
+    final Display display = shell.getDisplay();
+    bw.setTitleImage(display.getSystemImage(SWT.ICON_WARNING));
     final Label label = new Label(bw.getContents(), SWT.WRAP);
     label.setText("You can add any widgets to the contents composite of the "
         + "balloon window. You can add any widgets to the contents composite of the "
@@ -95,7 +121,7 @@ public class BalloonWindowExample {
     label.setBackground(bw.getShell().getBackground());
     bw.getContents().setSize(label.getSize());
     bw.addSelectionControl(label);
-    bw.setAnchor(SWT.TOP | SWT.LEFT);
+    bw.setAnchor(anchor);
     return bw;
   }
 }

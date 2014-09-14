@@ -16,14 +16,10 @@ package com.github.haixing_hu.swt.panel;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.widgets.Canvas;
@@ -37,6 +33,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
@@ -63,10 +61,6 @@ public class BalloonWindow {
 
   public static final int DEFAULT_STYLE = SWT.ON_TOP | SWT.TOOL | SWT.TITLE | SWT.CLOSE;
 
-  public static final RGB DEFAULT_BACKGROUND_COLOR = new RGB(0xFF, 0xFF, 0xE1);
-
-  public static final RGB DEFAULT_FORGROUND_COLOR = new RGB(0, 0, 0);
-
   public static final int DEFAULT_PREFERRED_ANCHOR = SWT.BOTTOM | SWT.RIGHT;
 
   public static final boolean DEFAULT_AUTO_ANCHOR = true;
@@ -83,32 +77,18 @@ public class BalloonWindow {
 
   public static final int DEFAULT_TITLE_WIDGET_SPACING = 8;
 
-  /**
-   * The default value of the color of the drop shadow.
-   */
-  public static final RGB DEFAULT_SHADOW_COLOR = new RGB(0,0,0);
+  private static final int SCREEN_MARGIN_WIDTH = 16;
 
-  /**
-   * The default value of the radius of the drop shadow in pixels.
-   */
-  public static final int DEFAULT_SHADOW_RADIUS = 24;
+  private static final int SCREEN_MARGIN_HEIGHT = 20;
 
-  /**
-   * The default value of the radius of the highlight area of the drop shadow,
-   * in pixels.
-   */
-  public static final int DEFAULT_SHADOW_HIGHLIGHT_RADIUS = 16;
+  private static final int ANCHOR_WIDTH = 54;
 
-  /**
-   * The default value of the opacity of the shadow, between 0 and 255.
-   */
-  public static final int DEFAULT_SHADOW_OPACITY = 100;
+  private static final int ANCHOR_HEIGHT = 20;
 
-  private final Shell shell;
-  private final Composite contents;
-  private Label titleLabel;
-  private Canvas titleImageLabel;
-  private final int style;
+  private static final int BALLOON_MARGIN_TOP = 10;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BalloonWindow.class);
+
   private int preferredAnchor = DEFAULT_PREFERRED_ANCHOR;
   private boolean autoAnchor = DEFAULT_AUTO_ANCHOR;
   private int locX = Integer.MIN_VALUE;
@@ -119,18 +99,22 @@ public class BalloonWindow {
   private int marginBottom = DEFAULT_MARGIN_BOTTOM;
   private int titleSpacing = DEFAULT_TITLE_SPACING;
   private int titleWidgetSpacing = DEFAULT_TITLE_WIDGET_SPACING;
+  private final int style;
+  private final Shell shell;
+  private Canvas titleIcon;
+  private Label titleLabel;
+  private ToolBar closeButton;
+  private final Composite contents;
+  private final Listener globalListener;
+  private final Listener shellListener;
+  private final Listener parentListener;
+  private Image closeIcon = null;
 
-  private int shadowRadius = DEFAULT_SHADOW_RADIUS;
-  private int shadowHighlightRadius = DEFAULT_SHADOW_HIGHLIGHT_RADIUS;
-  private int shadowOpacity = DEFAULT_SHADOW_OPACITY;
-  private Color shadowColor;
-
-  private ToolBar systemControlsBar;
   private final ArrayList<Object> selectionControls = new ArrayList<Object>();
-  private boolean addedGlobalListener;
+  private boolean addedGlobalListener = false;
   private final ArrayList<Listener> selectionListeners = new ArrayList<Listener>();
-  private Point contentsSize;
-  private Point titleSize;
+  private Point contentsSize;   //  internal use
+  private Point titleSize;      //  internal use
 
   /**
    * Constructs a new balloon window with the default style.
@@ -139,7 +123,7 @@ public class BalloonWindow {
    *    the parent shell of the new balloon window.
    */
   public BalloonWindow(Shell parent) {
-    this(null, parent, DEFAULT_STYLE);
+    this(parent, DEFAULT_STYLE);
   }
 
   /**
@@ -157,108 +141,132 @@ public class BalloonWindow {
    *    on the top of other windows.</li>
    *    </ul>
    */
-  public BalloonWindow(Shell parent, int style) {
-    this(null, parent, style);
-  }
-
-  /**
-   * Constructs a new balloon window with the default style.
-   *
-   * @param display
-   *    the display for the new balloon window.
-   * @param style
-   *    the SWT windows style of the new balloon window.
-   */
-  public BalloonWindow(Display display) {
-    this(display, null, DEFAULT_STYLE);
-  }
-
-  /**
-   * Constructs a new balloon window.
-   *
-   * @param display
-   *    the display for the new balloon window.
-   * @param style
-   *    the SWT windows style of the new balloon window. Supported styles are
-   *    <ul>
-   *    <li><code>SWT.TITLE</code>: if presented, the title will be shown.</li>
-   *    <li><code>SWT.CLOSe</code>: if presented, the close button on the right
-   *    of the title will be shown.</li>
-   *    <li><code>SWT.ON_TOP</code>: if presented, the balloon window will be always
-   *    on the top of other windows.</li>
-   *    </ul>
-   */
-  public BalloonWindow(Display display, int style) {
-    this(display, null, style);
-  }
-
-  private BalloonWindow(Display display, Shell parent, final int style) {
+  public BalloonWindow(final Shell parent, final int style) {
     this.style = style;
     final int shellStyle = (style & (SWT.ON_TOP | SWT.TOOL)) | SWT.NO_TRIM;
-    if (display != null) {
-      shell = new Shell(display, shellStyle);
-    } else {
-      shell = new Shell(parent, shellStyle);
-      display = shell.getDisplay();
-    }
-    shadowColor = SWTResourceManager.getColor(display, DEFAULT_SHADOW_COLOR);
+    shell = new Shell(parent, shellStyle);
+    final Display display = shell.getDisplay();
+    shell.setBackground(display.getSystemColor(SWT.COLOR_INFO_BACKGROUND));
+    shell.setForeground(display.getSystemColor(SWT.COLOR_INFO_FOREGROUND));
+
     contents = new Composite(shell, SWT.NONE);
-    shell.setBackground(SWTResourceManager.getColor(display, DEFAULT_BACKGROUND_COLOR));
-    shell.setForeground(SWTResourceManager.getColor(display, DEFAULT_FORGROUND_COLOR));
     contents.setBackground(shell.getBackground());
     contents.setForeground(shell.getForeground());
 
     selectionControls.add(shell);
+    if (titleIcon != null) {
+      selectionControls.add(titleIcon);
+    }
+    if (titleLabel != null) {
+      selectionControls.add(titleLabel);
+    }
+    if (closeButton != null) {
+      selectionControls.add(closeButton);
+    }
     selectionControls.add(contents);
 
-    final Listener globalListener = new Listener() {
+    //  The global listener is used to dispatch the mouse down event to
+    //  all controls in the selectionControls list.
+    //  If there is no close button, any mouse down event happened on one
+    //  of the selection control will close the balloon window.
+    globalListener = new Listener() {
       @Override
       public void handleEvent(Event event) {
-        final Widget w = event.widget;
-        for (int i = selectionControls.size() - 1; i >= 0; i--) {
-          if (selectionControls.get(i) == w) {
-            if ((style & SWT.CLOSE) != 0) {
-              for (int j = selectionListeners.size() - 1; j >= 0; j--) {
-                selectionListeners.get(j).handleEvent(event);
-              }
-            } else {
-              shell.close();
-            }
-            event.doit = false;
-          }
-        }
+        onMouseDown(event);
       }
     };
 
-    shell.addListener(SWT.Show, new Listener() {
+    //  add the listener to the shell
+    shellListener = new Listener() {
       @Override
       public void handleEvent(Event event) {
-        if (! addedGlobalListener) {
-          shell.getDisplay().addFilter(SWT.MouseDown, globalListener);
-          addedGlobalListener = true;
+        switch (event.type) {
+        case SWT.Dispose:
+          onDispose(event);
+          break;
+        case SWT.Show:
+          onShow(event);
+          break;
+        case SWT.Hide:
+          onHide(event);
+          break;
         }
       }
-    });
+    };
+    shell.addListener (SWT.Dispose, shellListener);
+    shell.addListener (SWT.Paint, shellListener);
+    shell.addListener (SWT.Show, shellListener);
+    shell.addListener (SWT.Hide, shellListener);
+    shell.addListener (SWT.MouseDown, shellListener);
 
-    shell.addListener(SWT.Hide, new Listener() {
+    //  dispose this balloon window if its parent is disposed.
+    parentListener = new Listener() {
       @Override
       public void handleEvent(Event event) {
-        if (addedGlobalListener) {
-          shell.getDisplay().removeFilter(SWT.MouseDown, globalListener);
-          addedGlobalListener = false;
-        }
+        shell.dispose();
       }
-    });
+    };
+    parent.addListener(SWT.Dispose, parentListener);
+  }
 
-    shell.addListener(SWT.Dispose, new Listener() {
-      @Override
-      public void handleEvent(Event event) {
-        if (addedGlobalListener) {
-          shell.getDisplay().removeFilter(SWT.MouseDown, globalListener);
-          addedGlobalListener = false;
+  private void onDispose(Event event) {
+    LOGGER.debug("onDispose()");
+    final Control parent = shell.getParent ();
+    parent.removeListener (SWT.Dispose, parentListener);
+    shell.removeListener (SWT.Dispose, shellListener);
+    shell.notifyListeners (SWT.Dispose, event);
+    event.type = SWT.None;
+    //  unregister the global listener
+    if (addedGlobalListener) {
+      shell.getDisplay().removeFilter(SWT.MouseDown, globalListener);
+      addedGlobalListener = false;
+    }
+    //  dispose the resources
+    if (closeIcon != null) {
+      closeIcon.dispose();
+      closeIcon = null;
+    }
+  }
+
+  private void onShow(Event event) {
+    LOGGER.debug("onShow()");
+    if (! addedGlobalListener) {
+      shell.getDisplay().addFilter(SWT.MouseDown, globalListener);
+      addedGlobalListener = true;
+    }
+  }
+
+  private void onHide(Event event) {
+    LOGGER.debug("onHide()");
+    if (addedGlobalListener) {
+      shell.getDisplay().removeFilter(SWT.MouseDown, globalListener);
+      addedGlobalListener = false;
+    }
+  }
+
+  private void onClose(Event event) {
+    LOGGER.debug("onClose()");
+    shell.close();
+  }
+
+  private void onMouseDown(Event event) {
+    LOGGER.debug("onMouseDown()");
+    final Widget w = event.widget;
+    for (int i = selectionControls.size() - 1; i >= 0; i--) {
+      if (selectionControls.get(i) == w) {
+        if (closeButton != null) {
+          for (int j = selectionListeners.size() - 1; j >= 0; j--) {
+            selectionListeners.get(j).handleEvent(event);
+          }
+        } else {
+          //  if there is no close button on the title bar of this balloon
+          //  window, click any of the selection control will close this
+          //  balloon window.
+          onClose(event);
         }
+        event.doit = false;
       }
-    });
+    }
   }
 
   /**
@@ -307,10 +315,16 @@ public class BalloonWindow {
   }
 
   /**
-   * Sets whether this balloon will automatically place the anchor.
+   * Sets whether this balloon will automatically reset the anchor if the
+   * preferred anchor is not suitable.
+   * <p>
+   * If the `autoAnchor` property is set to true, the balloon window will
+   * automatically reset the anchor if the preferred anchor will cause a part of
+   * the window outside the screen border.
    *
    * @param autoAnchor
-   *    whether this balloon will automatically place the anchor.
+   *          Indicates whether this balloon will automatically reset the anchor
+   *          if the preferred anchor is not suitable.
    */
   public void setAutoAnchor(boolean autoAnchor) {
     this.autoAnchor = autoAnchor;
@@ -387,80 +401,8 @@ public class BalloonWindow {
     this.titleSpacing = titleSpacing;
   }
 
-  public void setTitleWidgetSpacing(int titleImageSpacing) {
-    titleWidgetSpacing = titleImageSpacing;
-  }
-
-  /**
-   * Gets the shadowRadius.
-   *
-   * @return the shadowRadius.
-   */
-  public int getShadowRadius() {
-    return shadowRadius;
-  }
-
-  /**
-   * Sets the shadowRadius.
-   *
-   * @param shadowRadius the new shadowRadius to set.
-   */
-  public void setShadowRadius(int shadowRadius) {
-    this.shadowRadius = shadowRadius;
-  }
-
-  /**
-   * Gets the shadowHighlightRadius.
-   *
-   * @return the shadowHighlightRadius.
-   */
-  public int getShadowHighlightRadius() {
-    return shadowHighlightRadius;
-  }
-
-  /**
-   * Sets the shadowHighlightRadius.
-   *
-   * @param shadowHighlightRadius the new shadowHighlightRadius to set.
-   */
-  public void setShadowHighlightRadius(int shadowHighlightRadius) {
-    this.shadowHighlightRadius = shadowHighlightRadius;
-  }
-
-  /**
-   * Gets the shadowOpacity.
-   *
-   * @return the shadowOpacity.
-   */
-  public int getShadowOpacity() {
-    return shadowOpacity;
-  }
-
-  /**
-   * Sets the shadowOpacity.
-   *
-   * @param shadowOpacity the new shadowOpacity to set.
-   */
-  public void setShadowOpacity(int shadowOpacity) {
-    this.shadowOpacity = shadowOpacity;
-  }
-
-  /**
-   * Gets the shadowColor.
-   *
-   * @return the shadowColor.
-   */
-  public Color getShadowColor() {
-    return shadowColor;
-  }
-
-  /**
-   * Sets the shadowColor.
-   *
-   * @param shadowColor the new shadowColor to set.
-   */
-  public void setShadowColor(Color shadowColor) {
-    this.shadowColor = shadowColor;
+  public void setTitleWidgetSpacing(int titleWidgetSpacing) {
+    this.titleWidgetSpacing = titleWidgetSpacing;
   }
 
   public Shell getShell() {
@@ -493,178 +435,204 @@ public class BalloonWindow {
    * Closes and disposes this balloon window.
    */
   public void close() {
-    shell.close();
+    onClose(null);
   }
 
   private void prepareForOpen() {
+    contents.pack();
     contentsSize = contents.getSize();
-    titleSize = new Point(0, 0);
-    if ((style & SWT.TITLE) != 0) {
-      createTitle();
+    createTitle();
+    calculateTitleSize();
+    if (titleSize.x > contentsSize.x) {
+      contentsSize.x = titleSize.x;
+      contents.setSize(contentsSize);
     }
+    contentsSize.y += titleSize.y;
+
+    LOGGER.debug("Title size is {}", titleSize);
+    LOGGER.debug("Contents size is {}", contentsSize);
     final int anchor = calculateAnchor();
     final Point shellSize = setShellSize(anchor);
-    setChildrenLocations(anchor, shellSize);
+    putShellChildren(anchor, shellSize);
     setShellShape(anchor, shellSize);
     setShellLocation(anchor, shellSize);
   }
 
   private void createTitle() {
-    // create the title text label
+    final Image icon = shell.getImage();
+    if ((titleIcon == null) && (icon != null)) {
+      titleIcon = createTitleIcon(shell, icon);
+    }
     if (titleLabel == null) {
-      titleLabel = new Label(shell, SWT.NONE);
-      titleLabel.setBackground(shell.getBackground());
-      titleLabel.setForeground(shell.getForeground());
-      final Font titleFont = SWTResourceManager.getBoldFont(shell.getDisplay(),
-          shell.getFont());
-      titleLabel.setFont(titleFont);
-      selectionControls.add(titleLabel);
+      titleLabel = createTitleLabel(shell, shell.getText());
+    } else {
+      titleLabel.setText(shell.getText());
     }
-    final String titleText = shell.getText();
-    titleLabel.setText(titleText == null ? "" : titleText);
-    titleLabel.pack();
-    titleSize = titleLabel.getSize();
-    //  create the title image label
-    final Image titleImage = shell.getImage();
-    if ((titleImageLabel == null) && (titleImage != null)) {
-      titleImageLabel = new Canvas(shell, SWT.NONE);
-      titleImageLabel.setBackground(shell.getBackground());
-      titleImageLabel.setBounds(titleImage.getBounds());
-      titleImageLabel.addListener(SWT.Paint, new Listener() {
-        @Override
-        public void handleEvent(Event event) {
-          event.gc.drawImage(titleImage, 0, 0);
-        }
-      });
-      final Point imgSize = titleImageLabel.getSize();
-      titleSize.x += imgSize.x + titleWidgetSpacing;
-      if (imgSize.y > titleSize.y) {
-        titleSize.y = imgSize.y;
-      }
-      selectionControls.add(titleImageLabel);
+    if ((closeButton == null) && ((style & SWT.CLOSE) != 0)) {
+      closeButton = createCloseButton(shell);
     }
-    //  create the title close button
-    if ((systemControlsBar == null) && ((style & SWT.CLOSE) != 0)) {
-      final Display display = shell.getDisplay();
-      final Color closeFG = shell.getForeground();
-      final Color closeBG = shell.getBackground();
-      final Image closeImage = createCloseImage(display, closeBG, closeFG);
-      shell.addListener(SWT.Dispose, new Listener() {
-        @Override
-        public void handleEvent(Event event) {
-          closeImage.dispose();
-        }
-      });
-      systemControlsBar = new ToolBar(shell, SWT.FLAT | SWT.NO_FOCUS);
-      systemControlsBar.setBackground(closeBG);
-      systemControlsBar.setForeground(closeFG);
-      final ToolItem closeItem = new ToolItem(systemControlsBar, SWT.PUSH);
-      closeItem.setImage(closeImage);
-      closeItem.addListener(SWT.Selection, new Listener() {
-        @Override
-        public void handleEvent(Event event) {
-          shell.close();
-        }
-      });
-      systemControlsBar.pack();
-      final Point closeSize = systemControlsBar.getSize();
-      titleSize.x += closeSize.x + titleWidgetSpacing;
-      if (closeSize.y > titleSize.y) {
-        titleSize.y = closeSize.y;
-      }
-    }
+  }
 
-    titleSize.y += titleSpacing;
-    if (titleSize.x > contentsSize.x) {
-      contentsSize.x = titleSize.x;
-      contents.setSize(contentsSize.x, contentsSize.y);
+  private Canvas createTitleIcon(final Composite parent, final Image icon) {
+    LOGGER.debug("Creating the title icon.");
+    final Canvas canvas = new Canvas(parent, SWT.NONE);
+    canvas.setBackground(parent.getBackground());
+    canvas.setBounds(icon.getBounds());
+    canvas.addListener(SWT.Paint, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        event.gc.drawImage(icon, 0, 0);
+      }
+    });
+    return canvas;
+  }
+
+  private Label createTitleLabel(Composite parent, String text) {
+    LOGGER.debug("Creating the title label.");
+    final Label label = new Label(parent, SWT.NONE);
+    label.setBackground(parent.getBackground());
+    label.setForeground(parent.getForeground());
+    //  set the bold font of the title text
+    label.setFont(SWTResourceManager.getBoldFont(parent.getFont()));
+    //  set the title text
+    label.setText(text);
+    return label;
+  }
+
+  private ToolBar createCloseButton(Composite parent) {
+    LOGGER.debug("Creating the close button.");
+    final ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.NO_FOCUS);
+    toolbar.setBackground(parent.getBackground());
+    toolbar.setForeground(parent.getForeground());
+    final ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+    final Image icon = createCloseImage(parent.getDisplay(),
+          parent.getBackground(), parent.getForeground());
+    item.setImage(icon);
+    item.addListener(SWT.Dispose, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        icon.dispose();
+      }
+    });
+    item.addListener(SWT.Selection, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        onClose(event);
+      }
+    });
+    return toolbar;
+  }
+
+  private void calculateTitleSize() {
+    if ((style & SWT.TITLE) != 0) {
+      titleLabel.pack();
+      titleSize = titleLabel.getSize();
+      if (titleIcon != null) {
+        final Point iconSize = titleIcon.getSize();
+        titleSize.x += iconSize.x + titleWidgetSpacing;
+        titleSize.y = Math.max(titleSize.y, iconSize.y);
+      }
+      if (closeButton != null) {
+        closeButton.pack();
+        final Point closeSize = closeButton.getSize();
+        titleSize.x += closeSize.x + titleWidgetSpacing;
+        titleSize.y = Math.max(titleSize.y, closeSize.y);
+      }
+      titleSize.y += titleSpacing;
+    } else {
+      titleSize = new Point(0, 0);
     }
-    contentsSize.y += titleSize.y;
   }
 
   private int calculateAnchor() {
     int anchor = preferredAnchor;
     if ((anchor != SWT.NONE) && autoAnchor && (locX != Integer.MIN_VALUE)) {
       final Rectangle screen = shell.getDisplay().getClientArea();
+      final int marginWidth = marginLeft + marginRight;
+      final int marginHeight = marginTop + marginBottom;
       if ((anchor & SWT.LEFT) != 0) {
-        if (((locX + contentsSize.x + marginLeft + marginRight) - 16)
-              >= (screen.x + screen.width)) {
+        if (((locX + contentsSize.x + marginWidth) - SCREEN_MARGIN_WIDTH) >= (screen.x + screen.width)) {
           anchor = (anchor - SWT.LEFT) + SWT.RIGHT;
         }
-      } else // RIGHT
-      {
-        if (((locX - contentsSize.x - marginLeft - marginRight) + 16) < screen.x) {
+      } else {  // RIGHT
+        if (((locX - contentsSize.x - marginWidth) + SCREEN_MARGIN_WIDTH) < screen.x) {
           anchor = (anchor - SWT.RIGHT) + SWT.LEFT;
         }
       }
       if ((anchor & SWT.TOP) != 0) {
-        if ((locY + contentsSize.y + 20 + marginTop + marginBottom)
+        if ((locY + contentsSize.y + SCREEN_MARGIN_HEIGHT + marginHeight)
               >= (screen.y + screen.height)) {
           anchor = (anchor - SWT.TOP) + SWT.BOTTOM;
         }
-      } else // BOTTOM
-      {
-        if ((locY - contentsSize.y - 20 - marginTop - marginBottom) < screen.y) {
+      } else {  // BOTTOM
+        if ((locY - contentsSize.y - SCREEN_MARGIN_HEIGHT - marginHeight) < screen.y) {
           anchor = (anchor - SWT.BOTTOM) + SWT.TOP;
         }
       }
     }
+    LOGGER.debug("Set anchor to {}", anchor);
     return anchor;
   }
 
   private Point setShellSize(int anchor) {
+    final int marginWidth = marginLeft + marginRight;
+    final int marginHeight = marginTop + marginBottom;
     Point shellSize;
     if (anchor == SWT.NONE) {
-      shellSize = new Point(contentsSize.x + marginLeft + marginRight,
-          contentsSize.y + marginTop + marginBottom);
+      shellSize = new Point(contentsSize.x + marginWidth, contentsSize.y + marginHeight);
     } else {
-       shellSize = new Point(contentsSize.x + marginLeft + marginRight,
-           contentsSize.y + marginTop + marginBottom + 20);
+       shellSize = new Point(contentsSize.x +marginWidth, contentsSize.y + marginHeight + ANCHOR_HEIGHT);
     }
-    if (shellSize.x < (54 + marginLeft + marginRight)) {
-      shellSize.x = 54 + marginLeft + marginRight;
+    if (shellSize.x < (ANCHOR_WIDTH + marginWidth)) {
+      shellSize.x = ANCHOR_WIDTH + marginWidth;
     }
     if (anchor == SWT.NONE) {
-      if (shellSize.y < (10 + marginTop + marginBottom)) {
-        shellSize.y = 10 + marginTop + marginBottom;
+      if (shellSize.y < (BALLOON_MARGIN_TOP + marginTop + marginBottom)) {
+        shellSize.y = BALLOON_MARGIN_TOP + marginHeight;
       }
     } else {
-      if (shellSize.y < (30 + marginTop + marginBottom)) {
-        shellSize.y = 30 + marginTop + marginBottom;
+      if (shellSize.y < (ANCHOR_HEIGHT + BALLOON_MARGIN_TOP + marginHeight)) {
+        shellSize.y = ANCHOR_HEIGHT + BALLOON_MARGIN_TOP + marginHeight;
       }
     }
+    LOGGER.debug("Set shell size to {}", shellSize);
     shell.setSize(shellSize);
     return shellSize;
   }
 
-  private void setChildrenLocations(int anchor, Point shellSize) {
-    final int titleLocY = marginTop + (((anchor & SWT.TOP) != 0) ? 20 : 0);
-    contents.setLocation(marginLeft, titleSize.y + titleLocY);
+  private void putShellChildren(int anchor, Point shellSize) {
+    final int titleLocY = marginTop + (((anchor & SWT.TOP) != 0) ? ANCHOR_HEIGHT : 0);
     if ((style & SWT.TITLE) != 0) {
       final int realTitleHeight = titleSize.y - titleSpacing;
-      if (titleImageLabel != null) {
-        titleImageLabel.setLocation(marginLeft,
-            titleLocY + ((realTitleHeight - titleImageLabel.getSize().y) / 2));
-        titleLabel.setLocation(
-            marginLeft + titleImageLabel.getSize().x + titleWidgetSpacing,
-            titleLocY + ((realTitleHeight - titleLabel.getSize().y) / 2));
+      if (titleIcon != null) {
+        final Point iconSize = titleIcon.getSize();
+        titleIcon.setLocation(marginLeft, titleLocY + ((realTitleHeight - iconSize.y) / 2));
+        LOGGER.debug("Set title icon at {}", titleIcon.getLocation());
+        final Point labelSize = titleLabel.getSize();
+        titleLabel.setLocation(marginLeft + iconSize.x + titleWidgetSpacing,
+          titleLocY + ((realTitleHeight - labelSize.y) / 2));
+        LOGGER.debug("Set title label at {}", titleLabel.getLocation());
       } else {
+        final Point labelSize = titleLabel.getSize();
         titleLabel.setLocation(marginLeft,
-            titleLocY + ((realTitleHeight - titleLabel.getSize().y) / 2));
+          titleLocY + ((realTitleHeight - labelSize.y) / 2));
+        LOGGER.debug("Set title label at {}", titleLabel.getLocation());
       }
-      if (systemControlsBar != null) {
-        systemControlsBar.setLocation(
-            shellSize.x - marginRight - systemControlsBar.getSize().x,
-            titleLocY + ((realTitleHeight - systemControlsBar.getSize().y) / 2));
+      if (closeButton != null) {
+        final Point closeSize = closeButton.getSize();
+        closeButton.setLocation(shellSize.x - marginRight - closeSize.x,
+            titleLocY + ((realTitleHeight - closeSize.y) / 2));
+        LOGGER.debug("Set close button at {}", closeButton.getLocation());
       }
     }
+    final int contentsLocY = titleSize.y + titleLocY;
+    LOGGER.debug("Set contents at {}, {}", marginLeft, contentsLocY);
+    contents.setLocation(marginLeft, contentsLocY);
   }
 
   private void setShellShape(int anchor, Point shellSize) {
+    //  set the shape of the shell
     final int[] shape = createOutline(shellSize, anchor, true);
-    final int[] border = createOutline(shellSize, anchor, false);
-
-    //  draw the shape of the balloon window
     final Region region = new Region();
     region.add(shape);
     shell.setRegion(region);
@@ -674,12 +642,13 @@ public class BalloonWindow {
         region.dispose();
       }
     });
-
-    shell.addPaintListener(new PaintListener() {
+    //  draw the border of the shell
+    final int[] border = createOutline(shellSize, anchor, false);
+    shell.addListener(SWT.Paint, new Listener() {
       @Override
-      public void paintControl(PaintEvent e) {
-        // draw the border of the balloon window
-        e.gc.drawPolygon(border);
+      public void handleEvent(Event event) {
+        LOGGER.debug("onPaint()");
+        event.gc.drawPolygon(border);
       }
     });
   }
