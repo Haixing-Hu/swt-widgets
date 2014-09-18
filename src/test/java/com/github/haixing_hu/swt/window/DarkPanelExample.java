@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.panel;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.github.haixing_hu.swt.dialog.Dialog;
-import com.github.haixing_hu.swt.panel.DarkPanel;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
+import com.github.haixing_hu.swt.window.DarkPanel;
 
 /**
  * This snippet demonstrates the dark panel

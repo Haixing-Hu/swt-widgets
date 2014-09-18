@@ -9,46 +9,57 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.panel;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.github.haixing_hu.swt.dialog.Dialog;
-import com.github.haixing_hu.swt.panel.BlurredPanel;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
 
 /**
- * This snippet demonstrates the blurred panel
- *
+ * This snippet demonstrates the {@link PanelHeader} widget.
  */
-public class BurredPanelExample {
+public class PanelHeaderExample {
+
+	/**
+	 * @param args
+	 */
 	public static void main(final String[] args) {
 		final Display display = new Display();
-		final Shell shell = new Shell();
-		shell.setText("Blured Panel Example");
+		final Shell shell = new Shell(display);
+		shell.setLayout(new GridLayout(1, false));
+
+		final Image icon = SWTResourceManager.getImage(PanelHeaderExample.class,
+		    "/images/configure.png");
+
+		shell.setText("PanelHeader Example");
 		shell.setLayout(new GridLayout(2, false));
+
+		final PanelHeader header = new PanelHeader(shell, SWT.NONE);
+		header.setTitle("PanelHeader Title");
+		header.setImage(icon);
+		header.setDescription("Description area for the header. You can put all "
+		    + "<b>additional</b>, <i>relevant information</i> to the "
+		    + "description panel (or <u>jokes</u>, citations, "
+		    + "... <color=red>what you want!</color>)");
+		header.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2, 1));
 
 		createRow(shell, "First Name");
 		createRow(shell, "Last Name");
 		createRow(shell, "E-mail");
 		createRow(shell, "Phone number");
 
-		createButtons(shell);
-
-		shell.setSize(shell.computeSize(400, 400));
+		shell.setSize(640, 350);
 		SWTUtils.centerShell(shell);
 		shell.open();
+
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -65,45 +76,6 @@ public class BurredPanelExample {
 
 		final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-	}
-
-	private static void createButtons(final Shell shell) {
-		final BlurredPanel p = new BlurredPanel(shell);
-		final Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
-		composite.setLayout(new GridLayout(2, false));
-		final Button ok = new Button(composite, SWT.PUSH);
-		ok.setText("Ok");
-		ok.setLayoutData(new GridData(SWT.END, SWT.END, true, true));
-		ok.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				p.show();
-				Dialog.isConfirmed("Confirmation",
-				    "Are you sure you want to save this form ?");
-				p.hide();
-			}
-
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-			}
-		});
-
-		final Button cancel = new Button(composite, SWT.PUSH);
-		cancel.setText("Cancel");
-		cancel.setLayoutData(new GridData(SWT.CENTER, SWT.END, false, true));
-		cancel.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				shell.dispose();
-			}
-
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent e) {
-				shell.dispose();
-			}
-		});
 	}
 
 }

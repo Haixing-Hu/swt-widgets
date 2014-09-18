@@ -12,7 +12,7 @@
  *
  ******************************************************************************/
 
-package com.github.haixing_hu.swt.panel;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
+import com.github.haixing_hu.swt.window.BalloonWindow;
 
 /**
  * This snippet demonstrates the {@link BalloonWindow} widget.

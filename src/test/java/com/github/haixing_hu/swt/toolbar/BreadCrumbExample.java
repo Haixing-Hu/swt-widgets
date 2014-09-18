@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.breadcrumb;
+package com.github.haixing_hu.swt.toolbar;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.breadcrumb.BreadCrumb;
-import com.github.haixing_hu.swt.breadcrumb.BreadCrumbItem;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**

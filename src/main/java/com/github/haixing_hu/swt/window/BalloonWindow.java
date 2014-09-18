@@ -11,7 +11,7 @@
  *     Haixing Hu (https://github.com/Haixing-Hu/) - modify the code.
  *******************************************************************************/
 
-package com.github.haixing_hu.swt.panel;
+package com.github.haixing_hu.swt.window;
 
 import java.util.ArrayList;
 

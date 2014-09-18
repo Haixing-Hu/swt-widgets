@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.header;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -44,7 +44,7 @@ import com.github.haixing_hu.swt.utils.SWTUtils;
  * <dd>(none)</dd>
  * </dl>
  */
-public class Header extends Composite {
+public class PanelHeader extends Composite {
 
   /**
    *  Default value of the differences in size between the font of the title and
@@ -116,7 +116,7 @@ public class Header extends Composite {
    *              </ul>
    *
    */
-  public Header(final Composite parent, final int style) {
+  public PanelHeader(final Composite parent, final int style) {
     this(parent, style, DEFAULT_TITLE_FONT_SIZE_DIFF, DEFAULT_TITLE_FONT_STYLE,
         DEFAULT_TITLE_FONT_COLOR, DEFAULT_GRADIENT_START_COLOR,
         DEFAULT_GRADIENT_END_COLOR, DEFAULT_SEPERATOR_COLOR);
@@ -163,7 +163,7 @@ public class Header extends Composite {
    *              </ul>
    *
    */
-  public Header(final Composite parent, final int style, int titleFontSizeDiff,
+  public PanelHeader(final Composite parent, final int style, int titleFontSizeDiff,
       int titleFontStyle, RGB titleFontColor, RGB gradientStartColor,
       RGB gradientEndColor, RGB separatorColor) {
     super(parent, style);

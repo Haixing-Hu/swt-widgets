@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.breadcrumb;
+package com.github.haixing_hu.swt.toolbar;
 
 import java.util.ArrayList;
 import java.util.List;

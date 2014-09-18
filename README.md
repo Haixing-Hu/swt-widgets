@@ -21,7 +21,7 @@ Currently the following widgets are supported.
 
 - [StarRating](https://github.com/Haixing-Hu/swt-widgets/wiki/StarRating)
 - [BreadCrumb](https://github.com/Haixing-Hu/swt-widgets/wiki/BreadCrumb)
-- [Header](https://github.com/Haixing-Hu/swt-widgets/wiki/Header)
+- [PabelHeader](https://github.com/Haixing-Hu/swt-widgets/wiki/PabelHeader)
 - [Dialog](https://github.com/Haixing-Hu/swt-widgets/wiki/Dialog)
 - [DarkPanel](https://github.com/Haixing-Hu/swt-widgets/wiki/DarkPanel)
 - [BurredPanel](https://github.com/Haixing-Hu/swt-widgets/wiki/BurredPanel)
