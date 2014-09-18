@@ -29,7 +29,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 public abstract class ActionEx extends org.eclipse.jface.action.Action {
 
   private boolean visible = true;
-  private final boolean showImage = true;
   private boolean showDialog = false;
 
   /**

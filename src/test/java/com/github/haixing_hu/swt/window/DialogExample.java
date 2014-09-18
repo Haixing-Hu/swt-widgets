@@ -25,10 +25,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
-import com.github.haixing_hu.swt.window.DialogChoiceItem;
-import com.github.haixing_hu.swt.window.Dialog;
-import com.github.haixing_hu.swt.window.Dialog.Option;
-import com.github.haixing_hu.swt.window.Dialog.Type;
 
 /**
  * This snippet demonstrates the Dialog component.
