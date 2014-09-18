@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,12 @@ import com.github.haixing_hu.swt.utils.SWTResourceManager;
  * Instance of this class are composite that represents a choice like in Windows
  * Vista and Seven. It is composed of a green arrow, instruction and text
  */
-public class ChoiceWidget extends Composite {
+public class DialogChoiceWidget extends Composite {
 
   private static final String ARROW_IMAGE = "/images/right-green-arrow.png";
 
   private Image oldImage;
-  private ChoiceItem choiceItem;
+  private DialogChoiceItem choiceItem;
   private Label image;
   private Label instruction;
   private Label text;
@@ -89,7 +89,7 @@ public class ChoiceWidget extends Composite {
    * @see SWT#DOUBLE_BUFFERED
    * @see Widget#getStyle
    */
-  public ChoiceWidget(final Composite parent, final int style) {
+  public DialogChoiceWidget(final Composite parent, final int style) {
     super(parent, style);
 
     this.setBackgroundMode(SWT.INHERIT_DEFAULT);
@@ -151,18 +151,18 @@ public class ChoiceWidget extends Composite {
       @Override
       public void handleEvent(final Event event) {
 
-        if (event.widget.equals(ChoiceWidget.this)) {
-          ChoiceWidget.this.insideComposite = true;
+        if (event.widget.equals(DialogChoiceWidget.this)) {
+          DialogChoiceWidget.this.insideComposite = true;
         }
 
-        if (event.widget.equals(ChoiceWidget.this.image)) {
-          ChoiceWidget.this.insideImage = true;
+        if (event.widget.equals(DialogChoiceWidget.this.image)) {
+          DialogChoiceWidget.this.insideImage = true;
         }
-        if (event.widget.equals(ChoiceWidget.this.text)) {
-          ChoiceWidget.this.insideText = true;
+        if (event.widget.equals(DialogChoiceWidget.this.text)) {
+          DialogChoiceWidget.this.insideText = true;
         }
-        if (event.widget.equals(ChoiceWidget.this.instruction)) {
-          ChoiceWidget.this.insideInstruction = true;
+        if (event.widget.equals(DialogChoiceWidget.this.instruction)) {
+          DialogChoiceWidget.this.insideInstruction = true;
         }
 
         drawComposite();
@@ -173,18 +173,18 @@ public class ChoiceWidget extends Composite {
 
       @Override
       public void handleEvent(final Event event) {
-        if (event.widget.equals(ChoiceWidget.this)) {
-          ChoiceWidget.this.insideComposite = false;
+        if (event.widget.equals(DialogChoiceWidget.this)) {
+          DialogChoiceWidget.this.insideComposite = false;
         }
 
-        if (event.widget.equals(ChoiceWidget.this.image)) {
-          ChoiceWidget.this.insideImage = false;
+        if (event.widget.equals(DialogChoiceWidget.this.image)) {
+          DialogChoiceWidget.this.insideImage = false;
         }
-        if (event.widget.equals(ChoiceWidget.this.text)) {
-          ChoiceWidget.this.insideText = false;
+        if (event.widget.equals(DialogChoiceWidget.this.text)) {
+          DialogChoiceWidget.this.insideText = false;
         }
-        if (event.widget.equals(ChoiceWidget.this.instruction)) {
-          ChoiceWidget.this.insideInstruction = false;
+        if (event.widget.equals(DialogChoiceWidget.this.instruction)) {
+          DialogChoiceWidget.this.insideInstruction = false;
         }
         drawComposite();
       }
@@ -193,7 +193,7 @@ public class ChoiceWidget extends Composite {
     final Listener mouseClickListener = new Listener() {
       @Override
       public void handleEvent(final Event event) {
-        for (final SelectionListener listener : ChoiceWidget.this.selectionListeners) {
+        for (final SelectionListener listener : DialogChoiceWidget.this.selectionListeners) {
           listener.widgetSelected(null);
         }
       }
@@ -264,7 +264,7 @@ public class ChoiceWidget extends Composite {
   /**
    * @return the current choice item
    */
-  public ChoiceItem getChoiceItem() {
+  public DialogChoiceItem getChoiceItem() {
     return this.choiceItem;
   }
 
@@ -272,7 +272,7 @@ public class ChoiceWidget extends Composite {
    * @param choiceItem
    *          the choiceItem to set
    */
-  public void setChoiceItem(final ChoiceItem choiceItem) {
+  public void setChoiceItem(final DialogChoiceItem choiceItem) {
     this.choiceItem = choiceItem;
     this.instruction.setText(choiceItem.getInstruction());
     this.text.setText(choiceItem.getText());

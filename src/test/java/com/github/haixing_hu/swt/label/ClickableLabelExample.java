@@ -22,9 +22,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.dialog.Dialog;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
+import com.github.haixing_hu.swt.window.Dialog;
 
 /**
  * This snippet demonstrates the {@link ClickableLabel} widget.

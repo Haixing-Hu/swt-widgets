@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,7 +39,7 @@ import com.github.haixing_hu.swt.utils.SWTUtils;
 /**
  * Instances of this class are message areas
  */
-public class MessageArea extends DialogArea {
+public class DialogMessageArea extends DialogArea {
   private static final int DEFAULT_MIN_HEIGHT_FOR_EXCEPTIONS = 300;
 
   private static final int INDENT_NO_ICON = 8;
@@ -68,7 +68,7 @@ public class MessageArea extends DialogArea {
   // Informations for a choice dialog box
   private int choice;
   private int choiceDefaultSelection;
-  private ChoiceItem[] choiceValues;
+  private DialogChoiceItem[] choiceValues;
 
   // Informations for a progress bar displayed in a dialog box
   private ProgressBar progressBar;
@@ -87,7 +87,7 @@ public class MessageArea extends DialogArea {
    * @param parent
    *          dialog that is composed of this message area
    */
-  public MessageArea(final Dialog parent) {
+  public DialogMessageArea(final Dialog parent) {
     super(parent);
     this.radioChoice = - 1;
     this.choice = - 1;
@@ -103,8 +103,8 @@ public class MessageArea extends DialogArea {
    *          a list of the choice item
    * @return the current message area
    */
-  public MessageArea addChoice(final int defaultSelection,
-      final ChoiceItem... items) {
+  public DialogMessageArea addChoice(final int defaultSelection,
+      final DialogChoiceItem... items) {
     setInitialised(true);
     this.choiceDefaultSelection = defaultSelection;
     this.choiceValues = items;
@@ -120,7 +120,7 @@ public class MessageArea extends DialogArea {
    *          values
    * @return the current message area
    */
-  public MessageArea addRadioButtons(final int defaultSelection,
+  public DialogMessageArea addRadioButtons(final int defaultSelection,
       final String... values) {
     setInitialised(true);
     this.radioDefaultSelection = defaultSelection;
@@ -135,7 +135,7 @@ public class MessageArea extends DialogArea {
    *          defaut value of the textbox
    * @return the current message area
    */
-  public MessageArea addTextBox(final String value) {
+  public DialogMessageArea addTextBox(final String value) {
     setInitialised(true);
     this.textBoxValue = value;
     return this;
@@ -152,7 +152,7 @@ public class MessageArea extends DialogArea {
    *          default value
    * @return the current message area
    */
-  public MessageArea addProgressBar(final int mininum, final int maximum,
+  public DialogMessageArea addProgressBar(final int mininum, final int maximum,
       final int value) {
     setInitialised(true);
     this.progressBarMinimumValue = mininum;
@@ -162,7 +162,7 @@ public class MessageArea extends DialogArea {
   }
 
   /**
-   * @see org.mihalis.opal.OpalDialog.DialogArea#render()
+   * @see com.github.haixing_hu.swt.window.mihalis.opal.OpalDialog.DialogArea#render()
    */
   @Override
   public void render() {
@@ -342,7 +342,7 @@ public class MessageArea extends DialogArea {
         @Override
         public void widgetSelected(final SelectionEvent e) {
           if (button.getSelection()) {
-            MessageArea.this.radioChoice = index.intValue();
+            DialogMessageArea.this.radioChoice = index.intValue();
           }
         }
 
@@ -387,7 +387,7 @@ public class MessageArea extends DialogArea {
 
       @Override
       public void modifyText(final ModifyEvent e) {
-        MessageArea.this.textBoxValue = textbox.getText();
+        DialogMessageArea.this.textBoxValue = textbox.getText();
       }
     });
 
@@ -396,8 +396,8 @@ public class MessageArea extends DialogArea {
       @Override
       public void handleEvent(final Event e) {
         if ((e.keyCode == SWT.CR) || (e.keyCode == SWT.KEYPAD_CR)) {
-          MessageArea.this.parent.shell.dispose();
-          MessageArea.this.parent.getFooterArea().selectedButtonIndex = 0;
+          DialogMessageArea.this.parent.shell.dispose();
+          DialogMessageArea.this.parent.getFooterArea().selectedButtonIndex = 0;
         }
 
       }
@@ -420,7 +420,7 @@ public class MessageArea extends DialogArea {
    */
   private void createChoice() {
     for (int i = 0; i < this.choiceValues.length; i++) {
-      final ChoiceWidget choice = new ChoiceWidget(this.composite, SWT.RADIO);
+      final DialogChoiceWidget choice = new DialogChoiceWidget(this.composite, SWT.RADIO);
       choice
           .setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
       choice.setChoiceItem(this.choiceValues[i]);
@@ -433,8 +433,8 @@ public class MessageArea extends DialogArea {
          */
         @Override
         public void widgetSelected(final SelectionEvent e) {
-          MessageArea.this.choice = index.intValue();
-          MessageArea.this.parent.shell.dispose();
+          DialogMessageArea.this.choice = index.intValue();
+          DialogMessageArea.this.parent.shell.dispose();
         }
 
       });
@@ -492,7 +492,7 @@ public class MessageArea extends DialogArea {
    *          the title to set
    * @return the current message area
    */
-  public MessageArea setTitle(final String title) {
+  public DialogMessageArea setTitle(final String title) {
     this.title = title;
     setInitialised(true);
     return this;
@@ -509,7 +509,7 @@ public class MessageArea extends DialogArea {
    * @param icon
    *          the icon to set
    */
-  public MessageArea setIcon(final Image icon) {
+  public DialogMessageArea setIcon(final Image icon) {
     this.icon = icon;
     setInitialised(true);
     return this;
@@ -526,7 +526,7 @@ public class MessageArea extends DialogArea {
    * @param text
    *          the text to set
    */
-  public MessageArea setText(final String text) {
+  public DialogMessageArea setText(final String text) {
     this.text = text;
     setInitialised(true);
     if ((this.progressBar != null) && (this.label != null)
@@ -556,7 +556,7 @@ public class MessageArea extends DialogArea {
    *          the exception to set
    * @return
    */
-  public MessageArea setException(final Throwable exception) {
+  public DialogMessageArea setException(final Throwable exception) {
     this.exception = exception;
     setInitialised(true);
     return this;

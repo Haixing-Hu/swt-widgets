@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - initial API and implementation
  *     Eugene Ryzhikov - Author of the Oxbow Project (http://code.google.com/p/oxbow/) - Inspiration
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -23,12 +23,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import com.github.haixing_hu.swt.dialog.ChoiceItem;
-import com.github.haixing_hu.swt.dialog.Dialog;
-import com.github.haixing_hu.swt.dialog.Dialog.Option;
-import com.github.haixing_hu.swt.dialog.Dialog.Type;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
+import com.github.haixing_hu.swt.window.DialogChoiceItem;
+import com.github.haixing_hu.swt.window.Dialog;
+import com.github.haixing_hu.swt.window.Dialog.Option;
+import com.github.haixing_hu.swt.window.Dialog.Type;
 
 /**
  * This snippet demonstrates the Dialog component.
@@ -252,12 +252,12 @@ public class DialogExample {
   private static void displayChoice() {
     final int choice = Dialog.choice(
         "What do you want to do with your game in\nprogress?", "", 1,
-        new ChoiceItem("Exit and save my game",
+        new DialogChoiceItem("Exit and save my game",
             "Save your game in progress, then exit. "
                 + "This will\noverwrite any previously saved games."),
-        new ChoiceItem("Exit and don't save", "Exit without saving your game. "
+        new DialogChoiceItem("Exit and don't save", "Exit without saving your game. "
             + "This is counted\nas a loss in your statistics."),
-        new ChoiceItem("Don't exit", "Return to your game progress"));
+        new DialogChoiceItem("Don't exit", "Return to your game progress"));
     System.out.println("Choice is..." + choice);
   }
 

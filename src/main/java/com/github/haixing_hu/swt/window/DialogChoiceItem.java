@@ -9,12 +9,12 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 /**
- * Instances of this class are choice items used by the choice widget
+ * Instances of this class are choice items used by the choice widget.
  */
-public class ChoiceItem {
+public class DialogChoiceItem {
 
   private final String instruction;
   private final String text;
@@ -27,7 +27,7 @@ public class ChoiceItem {
    * @param text
    *          text displayed under the instruction
    */
-  public ChoiceItem(final String instruction, final String text) {
+  public DialogChoiceItem(final String instruction, final String text) {
     this.instruction = instruction;
     this.text = text;
   }
@@ -38,7 +38,7 @@ public class ChoiceItem {
    * @param instruction
    *          instruction
    */
-  public ChoiceItem(final String instruction) {
+  public DialogChoiceItem(final String instruction) {
     this(instruction, null);
   }
 
@@ -46,14 +46,14 @@ public class ChoiceItem {
    * @return the instruction
    */
   public String getInstruction() {
-    return this.instruction;
+    return instruction;
   }
 
   /**
    * @return the text
    */
   public String getText() {
-    return this.text;
+    return text;
   };
 
 }

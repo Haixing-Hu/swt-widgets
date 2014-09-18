@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -81,8 +81,8 @@ public class Dialog {
 
   private String title;
   Type buttonType;
-  private final MessageArea messageArea;
-  private final FooterArea footerArea;
+  private final DialogMessageArea messageArea;
+  private final DialogFooterArea footerArea;
   final Shell shell;
 
   private int minimumWidth = 300;
@@ -134,8 +134,8 @@ public class Dialog {
         shell.setImage(parent.getImage());
       }
     }
-    messageArea = new MessageArea(this);
-    footerArea = new FooterArea(this);
+    messageArea = new DialogMessageArea(this);
+    footerArea = new DialogFooterArea(this);
   }
 
   /**
@@ -491,7 +491,7 @@ public class Dialog {
    * @return the index of the selected value
    */
   public static int choice(final String title, final String text,
-      final int defaultSelection, final ChoiceItem... items) {
+      final int defaultSelection, final DialogChoiceItem... items) {
     return choice(null, title, text, defaultSelection, items);
   }
 
@@ -511,7 +511,7 @@ public class Dialog {
    * @return the index of the selected value
    */
   public static int choice(final Shell shell, final String title,
-      final String text, final int defaultSelection, final ChoiceItem... items) {
+      final String text, final int defaultSelection, final DialogChoiceItem... items) {
     final Dialog dialog = new Dialog(shell);
     final Messages messages = Messages.getInstance();
     dialog.setTitle(messages.get(MESSAGE_CHOICE));
@@ -591,14 +591,14 @@ public class Dialog {
   /**
    * @return the messageArea
    */
-  public MessageArea getMessageArea() {
+  public DialogMessageArea getMessageArea() {
     return messageArea;
   }
 
   /**
    * @return the footerArea
    */
-  public FooterArea getFooterArea() {
+  public DialogFooterArea getFooterArea() {
     return footerArea;
   }
 

@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -20,7 +20,7 @@ import com.github.haixing_hu.lang.SystemUtils;
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 
 /**
- * This abstract class if the mother of MessageArea and FooterArea classes
+ * This abstract class if the mother of DialogMessageArea and DialogFooterArea classes
  */
 abstract class DialogArea {
   private static final String MORE_DETAILS_IMAGE = "/images/more-details.png";

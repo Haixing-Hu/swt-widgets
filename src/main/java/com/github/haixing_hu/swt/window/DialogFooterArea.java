@@ -9,7 +9,7 @@
  *     Laurent CARON (laurent.caron at gmail dot com) - Initial implementation and API
  *     Haixing Hu (https://github.com/Haixing-Hu/)  - Modification for personal use.
  *******************************************************************************/
-package com.github.haixing_hu.swt.dialog;
+package com.github.haixing_hu.swt.window;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,13 +30,13 @@ import org.eclipse.swt.widgets.Text;
 
 import com.github.haixing_hu.swt.utils.Messages;
 
-import static com.github.haixing_hu.swt.dialog.Dialog.MESSAGE_FEWER_DETAILS;
-import static com.github.haixing_hu.swt.dialog.Dialog.MESSAGE_MORE_DETAILS;
+import static com.github.haixing_hu.swt.window.Dialog.MESSAGE_FEWER_DETAILS;
+import static com.github.haixing_hu.swt.window.Dialog.MESSAGE_MORE_DETAILS;
 
 /**
  * Instances of this class are message areas
  */
-public class FooterArea extends DialogArea {
+public class DialogFooterArea extends DialogArea {
   private static final int BUTTON_WIDTH = 70;
   private Image icon;
   private String footerText;
@@ -68,7 +68,7 @@ public class FooterArea extends DialogArea {
    * @param parent
    *          dialog that is composed of this footer area
    */
-  public FooterArea(final Dialog parent) {
+  public DialogFooterArea(final Dialog parent) {
     super(parent);
     this.selectedButtonIndex = - 1;
     final Messages messages = Messages.getInstance();
@@ -87,7 +87,7 @@ public class FooterArea extends DialogArea {
    *          default value of the check box
    * @return this footer area
    */
-  public FooterArea addCheckBox(final String label, final boolean selection) {
+  public DialogFooterArea addCheckBox(final String label, final boolean selection) {
     this.checkBoxLabel = label;
     this.checkBoxValue = selection;
     this.setInitialised(true);
@@ -95,7 +95,7 @@ public class FooterArea extends DialogArea {
   }
 
   /**
-   * @see org.mihalis.opal.OpalDialog.DialogArea#render()
+   * @see com.github.haixing_hu.swt.window.mihalis.opal.OpalDialog.DialogArea#render()
    */
   @Override
   void render() {
@@ -172,8 +172,8 @@ public class FooterArea extends DialogArea {
          */
         @Override
         public void widgetSelected(final SelectionEvent e) {
-          FooterArea.this.parent.shell.dispose();
-          FooterArea.this.selectedButtonIndex = integer.intValue();
+          DialogFooterArea.this.parent.shell.dispose();
+          DialogFooterArea.this.selectedButtonIndex = integer.intValue();
         }
 
       });
@@ -192,19 +192,19 @@ public class FooterArea extends DialogArea {
 
         @Override
         public void run() {
-          FooterArea.this.timer--;
-          if (FooterArea.this.disabledButton.isDisposed()) {
+          DialogFooterArea.this.timer--;
+          if (DialogFooterArea.this.disabledButton.isDisposed()) {
             return;
           }
 
-          if (FooterArea.this.timer == 0) {
-            FooterArea.this.disabledButton
-                .setText((String) FooterArea.this.disabledButton.getData());
-            FooterArea.this.disabledButton.setEnabled(true);
+          if (DialogFooterArea.this.timer == 0) {
+            DialogFooterArea.this.disabledButton
+                .setText((String) DialogFooterArea.this.disabledButton.getData());
+            DialogFooterArea.this.disabledButton.setEnabled(true);
           } else {
-            FooterArea.this.disabledButton
-                .setText(FooterArea.this.disabledButton.getData() + " ("
-                    + FooterArea.this.timer + ")");
+            DialogFooterArea.this.disabledButton
+                .setText(DialogFooterArea.this.disabledButton.getData() + " ("
+                    + DialogFooterArea.this.timer + ")");
             Display.getCurrent().timerExec(1000, this);
           }
 
@@ -240,28 +240,28 @@ public class FooterArea extends DialogArea {
     final Listener listener = new Listener() {
       @Override
       public void handleEvent(final Event event) {
-        if (FooterArea.this.parent.getMessageArea().getException() != null) {
-          if (label.getText().equals(FooterArea.this.expandedLabelText)) {
-            label.setText(FooterArea.this.collapsedLabelText);
-            icon.setImage(FooterArea.this.getMoreDetailsImage());
-            FooterArea.this.parent.getMessageArea().hideException();
+        if (DialogFooterArea.this.parent.getMessageArea().getException() != null) {
+          if (label.getText().equals(DialogFooterArea.this.expandedLabelText)) {
+            label.setText(DialogFooterArea.this.collapsedLabelText);
+            icon.setImage(DialogFooterArea.this.getMoreDetailsImage());
+            DialogFooterArea.this.parent.getMessageArea().hideException();
           } else {
-            label.setText(FooterArea.this.expandedLabelText);
-            icon.setImage(FooterArea.this.getFewerDetailsImage());
-            FooterArea.this.parent.getMessageArea().showException();
+            label.setText(DialogFooterArea.this.expandedLabelText);
+            icon.setImage(DialogFooterArea.this.getFewerDetailsImage());
+            DialogFooterArea.this.parent.getMessageArea().showException();
           }
 
         } else {
-          if (label.getText().equals(FooterArea.this.expandedLabelText)) {
-            label.setText(FooterArea.this.collapsedLabelText);
-            icon.setImage(FooterArea.this.getMoreDetailsImage());
-            FooterArea.this.expandedPanel.dispose();
-            FooterArea.this.parent.pack();
+          if (label.getText().equals(DialogFooterArea.this.expandedLabelText)) {
+            label.setText(DialogFooterArea.this.collapsedLabelText);
+            icon.setImage(DialogFooterArea.this.getMoreDetailsImage());
+            DialogFooterArea.this.expandedPanel.dispose();
+            DialogFooterArea.this.parent.pack();
           } else {
-            label.setText(FooterArea.this.expandedLabelText);
-            icon.setImage(FooterArea.this.getFewerDetailsImage());
-            FooterArea.this.createExpandedPanel(numberOfColumnsParam);
-            FooterArea.this.parent.pack();
+            label.setText(DialogFooterArea.this.expandedLabelText);
+            icon.setImage(DialogFooterArea.this.getFewerDetailsImage());
+            DialogFooterArea.this.createExpandedPanel(numberOfColumnsParam);
+            DialogFooterArea.this.parent.pack();
           }
         }
       }
@@ -290,7 +290,7 @@ public class FooterArea extends DialogArea {
        */
       @Override
       public void widgetSelected(final SelectionEvent e) {
-        FooterArea.this.checkBoxValue = button.getSelection();
+        DialogFooterArea.this.checkBoxValue = button.getSelection();
       }
 
     });
@@ -373,7 +373,7 @@ public class FooterArea extends DialogArea {
    *          the icon to set
    * @return this footer area
    */
-  public FooterArea setIcon(final Image icon) {
+  public DialogFooterArea setIcon(final Image icon) {
     this.icon = icon;
     this.setInitialised(true);
     return this;
@@ -391,7 +391,7 @@ public class FooterArea extends DialogArea {
    *          the text to set
    * @return this footer area
    */
-  public FooterArea setFooterText(final String text) {
+  public DialogFooterArea setFooterText(final String text) {
     this.footerText = text;
     this.setInitialised(true);
     return this;
@@ -409,7 +409,7 @@ public class FooterArea extends DialogArea {
    *          the button labels to set
    * @return this footer area
    */
-  public FooterArea setButtonLabels(final List<String> buttonLabels) {
+  public DialogFooterArea setButtonLabels(final List<String> buttonLabels) {
     this.buttonLabels = buttonLabels;
     this.setInitialised(true);
     return this;
@@ -420,7 +420,7 @@ public class FooterArea extends DialogArea {
    *          the button labels to set
    * @return this footer area
    */
-  public FooterArea setButtonLabels(final String... buttonLabels) {
+  public DialogFooterArea setButtonLabels(final String... buttonLabels) {
     this.buttonLabels = Arrays.asList(buttonLabels);
     this.setInitialised(true);
     return this;
@@ -438,7 +438,7 @@ public class FooterArea extends DialogArea {
    *          the default button index to set
    * @return this footer area
    */
-  public FooterArea setDefaultButtonIndex(final int defaultButtonIndex) {
+  public DialogFooterArea setDefaultButtonIndex(final int defaultButtonIndex) {
     this.defaultButtonIndex = defaultButtonIndex;
     this.setInitialised(true);
     return this;
@@ -456,7 +456,7 @@ public class FooterArea extends DialogArea {
    *          the timer value to set
    * @return this footer area
    */
-  public FooterArea setTimer(final int timer) {
+  public DialogFooterArea setTimer(final int timer) {
     this.timer = timer;
     this.setInitialised(true);
     return this;
@@ -474,7 +474,7 @@ public class FooterArea extends DialogArea {
    *          the timer index button to set
    * @return this footer area
    */
-  public FooterArea setTimerIndexButton(final int timerIndexButton) {
+  public DialogFooterArea setTimerIndexButton(final int timerIndexButton) {
     this.timerIndexButton = timerIndexButton;
     this.setInitialised(true);
     return this;
@@ -499,7 +499,7 @@ public class FooterArea extends DialogArea {
    *          the collapsed label text to set
    * @return this footer area
    */
-  public FooterArea setCollapsedLabelText(final String collapsedLabelText) {
+  public DialogFooterArea setCollapsedLabelText(final String collapsedLabelText) {
     this.details = true;
     this.collapsedLabelText = collapsedLabelText;
     this.setInitialised(true);
@@ -518,7 +518,7 @@ public class FooterArea extends DialogArea {
    *          the expanded label text to set
    * @return this footer area
    */
-  public FooterArea setExpandedLabelText(final String expandedLabelText) {
+  public DialogFooterArea setExpandedLabelText(final String expandedLabelText) {
     this.details = true;
     this.expandedLabelText = expandedLabelText;
     this.setInitialised(true);
@@ -537,7 +537,7 @@ public class FooterArea extends DialogArea {
    *          the expanded flag to set
    * @return this footer area
    */
-  public FooterArea setExpanded(final boolean expanded) {
+  public DialogFooterArea setExpanded(final boolean expanded) {
     this.details = true;
     this.expanded = expanded;
     this.setInitialised(true);
@@ -556,7 +556,7 @@ public class FooterArea extends DialogArea {
    *          the detail text to set
    * @return this footer area
    */
-  public FooterArea setDetailText(final String detailText) {
+  public DialogFooterArea setDetailText(final String detailText) {
     this.details = true;
     this.detailText = detailText;
     this.setInitialised(true);
