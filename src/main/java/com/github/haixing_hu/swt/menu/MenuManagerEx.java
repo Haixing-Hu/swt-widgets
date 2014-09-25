@@ -1190,6 +1190,6 @@ public class MenuManagerEx extends ContributionManager implements IMenuManager {
     if (! action.isVisible()) {
       item.setVisible(false);
     }
-    add(item);
+    super.add(item);
   }
 }

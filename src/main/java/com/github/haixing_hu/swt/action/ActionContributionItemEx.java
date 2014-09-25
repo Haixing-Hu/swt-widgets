@@ -381,11 +381,11 @@ public class ActionContributionItemEx extends ContributionItem {
       update(null);
 
       // Attach some extra listeners.
-      action.addPropertyChangeListener(propertyListener);
       if (action != null) {
+        action.addPropertyChangeListener(propertyListener);
         final String commandId = action.getActionDefinitionId();
-        final ExternalActionManager.ICallback callback = ExternalActionManager
-            .getInstance().getCallback();
+        final ExternalActionManager.ICallback callback =
+            ExternalActionManager.getInstance().getCallback();
 
         if ((callback != null) && (commandId != null)) {
           callback.addPropertyChangeListener(commandId, actionTextListener);
