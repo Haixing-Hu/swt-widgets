@@ -419,6 +419,24 @@ public class BalloonWindow {
     this.titleWidgetSpacing = titleWidgetSpacing;
   }
 
+  public Color getBackground() {
+    return shell.getBackground();
+  }
+
+  public void setBackground(Color color) {
+    shell.setBackground(color);
+    contents.setBackground(color);
+  }
+
+  public Color getForeground() {
+    return shell.getForeground();
+  }
+
+  public void setForeground(Color color) {
+    shell.setForeground(color);
+    contents.setForeground(color);
+  }
+
   public Shell getShell() {
     return shell;
   }
