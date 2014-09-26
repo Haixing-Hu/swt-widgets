@@ -81,11 +81,17 @@ public class BalloonWindow {
 
   private static final int SCREEN_MARGIN_HEIGHT = 20;
 
-  private static final int ANCHOR_WIDTH = 54;
+  private static final int CORNER_RADIUS = 5;
 
-  private static final int ANCHOR_HEIGHT = 20;
+  private static final int ANCHOR_CORNER_OFFSET = 10;
 
-  private static final int BALLOON_MARGIN_TOP = 10;
+  private static final int ANCHOR_SIZE = 20;
+
+  private static final int ANCHOR_MIN_SPACE = ((CORNER_RADIUS + ANCHOR_CORNER_OFFSET) * 2) + ANCHOR_SIZE;
+
+  private static final int BALLOON_MARGIN = 10;
+
+  private static final int OUTER_OFFSET = 2;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BalloonWindow.class);
 
@@ -135,7 +141,7 @@ public class BalloonWindow {
    *    the SWT windows style of the new balloon window. Supported styles are
    *    <ul>
    *    <li><code>SWT.TITLE</code>: if presented, the title will be shown.</li>
-   *    <li><code>SWT.CLOSe</code>: if presented, the close button on the right
+   *    <li><code>SWT.CLOSE</code>: if presented, the close button on the right
    *    of the title will be shown.</li>
    *    <li><code>SWT.ON_TOP</code>: if presented, the balloon window will be always
    *    on the top of other windows.</li>
@@ -295,6 +301,10 @@ public class BalloonWindow {
    * <li><code>SWT.RIGHT | SWT.TOP</code></li>
    * <li><code>SWT.LEFT | SWT.BOTTOM</code></li>
    * <li><code>SWT.RIGHT | SWT.BOTTOM</code></li>
+   * <li><code>SWT.TOP</code></li>
+   * <li><code>SWT.RIGHT</code></li>
+   * <li><code>SWT.BITTOM</code></li>
+   * <li><code>SWT.LEFT</code></li>
    * </ul>
    *
    * @param anchor
@@ -307,6 +317,10 @@ public class BalloonWindow {
     case SWT.RIGHT | SWT.TOP:
     case SWT.LEFT | SWT.BOTTOM:
     case SWT.RIGHT | SWT.BOTTOM:
+    case SWT.TOP:
+    case SWT.BOTTOM:
+    case SWT.RIGHT:
+    case SWT.LEFT:
       break;
     default:
       throw new IllegalArgumentException("Illegal anchor value " + anchor);
@@ -579,21 +593,26 @@ public class BalloonWindow {
     final int marginHeight = marginTop + marginBottom;
     Point shellSize;
     if (anchor == SWT.NONE) {
-      shellSize = new Point(contentsSize.x + marginWidth, contentsSize.y + marginHeight);
+      shellSize = new Point(contentsSize.x + marginWidth,
+          contentsSize.y + marginHeight);
+      shellSize.x = Math.max(shellSize.x, ANCHOR_MIN_SPACE + marginWidth);
+      shellSize.y = Math.max(shellSize.y, BALLOON_MARGIN + marginHeight);
+    } else if ((anchor & (SWT.TOP | SWT.BOTTOM)) != 0) {
+      //  the anchor is at the top or bottom
+      shellSize = new Point(contentsSize.x +marginWidth,
+          contentsSize.y + marginHeight + ANCHOR_SIZE);
+      shellSize.x = Math.max(shellSize.x, ANCHOR_MIN_SPACE + marginWidth);
+      shellSize.y = Math.max(shellSize.y, ANCHOR_SIZE + BALLOON_MARGIN + marginHeight);
+    } else if ((anchor & (SWT.LEFT | SWT.RIGHT)) != 0) {
+      //  the anchor is at the left or right
+      shellSize = new Point(contentsSize.x +marginWidth + ANCHOR_SIZE,
+          contentsSize.y + marginHeight);
+      shellSize.x = Math.max(shellSize.x, ANCHOR_SIZE + BALLOON_MARGIN + marginWidth);
+      shellSize.y = Math.max(shellSize.y, ANCHOR_MIN_SPACE + marginHeight);
     } else {
-       shellSize = new Point(contentsSize.x +marginWidth, contentsSize.y + marginHeight + ANCHOR_HEIGHT);
-    }
-    if (shellSize.x < (ANCHOR_WIDTH + marginWidth)) {
-      shellSize.x = ANCHOR_WIDTH + marginWidth;
-    }
-    if (anchor == SWT.NONE) {
-      if (shellSize.y < (BALLOON_MARGIN_TOP + marginTop + marginBottom)) {
-        shellSize.y = BALLOON_MARGIN_TOP + marginHeight;
-      }
-    } else {
-      if (shellSize.y < (ANCHOR_HEIGHT + BALLOON_MARGIN_TOP + marginHeight)) {
-        shellSize.y = ANCHOR_HEIGHT + BALLOON_MARGIN_TOP + marginHeight;
-      }
+      //  impossible situation
+      shellSize = new Point(0, 0);
+      SWT.error(SWT.ERROR_INVALID_ARGUMENT);
     }
     LOGGER.debug("Set shell size to {}", shellSize);
     shell.setSize(shellSize);
@@ -601,33 +620,36 @@ public class BalloonWindow {
   }
 
   private void putShellChildren(int anchor, Point shellSize) {
-    final int titleLocY = marginTop + (((anchor & SWT.TOP) != 0) ? ANCHOR_HEIGHT : 0);
+    final int offsetTop = marginTop + (((anchor & SWT.TOP) != 0) ? ANCHOR_SIZE : 0);
+    final int offsetLeft = marginLeft + ((anchor == SWT.LEFT) ? ANCHOR_SIZE : 0);
+    final int offsetRight = marginRight + ((anchor == SWT.RIGHT) ? ANCHOR_SIZE : 0);
     if ((style & SWT.TITLE) != 0) {
       final int realTitleHeight = titleSize.y - titleSpacing;
       if (titleIcon != null) {
         final Point iconSize = titleIcon.getSize();
-        titleIcon.setLocation(marginLeft, titleLocY + ((realTitleHeight - iconSize.y) / 2));
+        titleIcon.setLocation(offsetLeft,
+            offsetTop + ((realTitleHeight - iconSize.y) / 2));
         LOGGER.debug("Set title icon at {}", titleIcon.getLocation());
         final Point labelSize = titleLabel.getSize();
-        titleLabel.setLocation(marginLeft + iconSize.x + titleWidgetSpacing,
-          titleLocY + ((realTitleHeight - labelSize.y) / 2));
+        titleLabel.setLocation(offsetLeft + iconSize.x + titleWidgetSpacing,
+            offsetTop + ((realTitleHeight - labelSize.y) / 2));
         LOGGER.debug("Set title label at {}", titleLabel.getLocation());
       } else {
         final Point labelSize = titleLabel.getSize();
-        titleLabel.setLocation(marginLeft,
-          titleLocY + ((realTitleHeight - labelSize.y) / 2));
+        titleLabel.setLocation(offsetLeft,
+            offsetTop + ((realTitleHeight - labelSize.y) / 2));
         LOGGER.debug("Set title label at {}", titleLabel.getLocation());
       }
       if (closeButton != null) {
         final Point closeSize = closeButton.getSize();
-        closeButton.setLocation(shellSize.x - marginRight - closeSize.x,
-            titleLocY + ((realTitleHeight - closeSize.y) / 2));
+        closeButton.setLocation(shellSize.x - offsetRight - closeSize.x,
+            offsetTop + ((realTitleHeight - closeSize.y) / 2));
         LOGGER.debug("Set close button at {}", closeButton.getLocation());
       }
     }
-    final int contentsLocY = titleSize.y + titleLocY;
-    LOGGER.debug("Set contents at {}, {}", marginLeft, contentsLocY);
-    contents.setLocation(marginLeft, contentsLocY);
+    final int contentsLocY = titleSize.y + offsetTop;
+    LOGGER.debug("Set contents at {}, {}", offsetLeft, contentsLocY);
+    contents.setLocation(offsetLeft, contentsLocY);
   }
 
   private void setShellShape(int anchor, Point shellSize) {
@@ -655,33 +677,58 @@ public class BalloonWindow {
 
   private void setShellLocation(int anchor, Point shellSize) {
     final Rectangle screen = shell.getDisplay().getClientArea();
-    if (locX != Integer.MIN_VALUE) {
-      final Point shellLoc = new Point(locX, locY);
-      if ((anchor & SWT.BOTTOM) != 0) {
-        shellLoc.y = (shellLoc.y - shellSize.y) + 1;
-      }
-      if ((anchor & SWT.LEFT) != 0) {
-        shellLoc.x -= 15;
-      } else if ((anchor & SWT.RIGHT) != 0) {
-        shellLoc.x = (shellLoc.x - shellSize.x) + 16;
-      }
-      if (autoAnchor) {
-        if (shellLoc.x < screen.x) {
-          shellLoc.x = screen.x;
-        } else if (shellLoc.x > ((screen.x + screen.width) - shellSize.x)) {
-          shellLoc.x = (screen.x + screen.width) - shellSize.x;
-        }
-
-        if (anchor == SWT.NONE) {
-          if (shellLoc.y < screen.y) {
-            shellLoc.y = screen.y;
-          } else if (shellLoc.y > ((screen.y + screen.height) - shellSize.y)) {
-            shellLoc.y = (screen.y + screen.height) - shellSize.y;
-          }
-        }
-      }
-      shell.setLocation(shellLoc);
+    if (locX == Integer.MIN_VALUE) {
+      return;
     }
+    final Point shellLoc = new Point(locX, locY);
+    switch (anchor) {
+    case SWT.LEFT | SWT.TOP:
+      shellLoc.x -= (CORNER_RADIUS | ANCHOR_CORNER_OFFSET);
+      break;
+    case SWT.TOP:
+      shellLoc.x -= shellSize.x / 2;
+      break;
+    case SWT.RIGHT | SWT.TOP:
+      shellLoc.x = (shellLoc.x - shellSize.x) + (CORNER_RADIUS | ANCHOR_CORNER_OFFSET);
+      break;
+    case SWT.RIGHT:
+      shellLoc.x -= shellSize.x;
+      shellLoc.y -= shellSize.y / 2;
+      break;
+    case SWT.RIGHT | SWT.BOTTOM:
+      shellLoc.x = (shellLoc.x - shellSize.x) + (CORNER_RADIUS | ANCHOR_CORNER_OFFSET);
+      shellLoc.y = (shellLoc.y - shellSize.y);
+      break;
+    case SWT.BOTTOM:
+      shellLoc.x -= shellSize.x / 2;
+      shellLoc.y = (shellLoc.y - shellSize.y);
+      break;
+    case SWT.LEFT | SWT.BOTTOM:
+      shellLoc.x -= (CORNER_RADIUS | ANCHOR_CORNER_OFFSET);
+      shellLoc.y = (shellLoc.y - shellSize.y);
+      break;
+    case SWT.LEFT:
+      shellLoc.y -= shellSize.y / 2;
+      break;
+    default:
+      break;
+    }
+
+    if (autoAnchor) {
+      if (shellLoc.x < screen.x) {
+        shellLoc.x = screen.x;
+      } else if (shellLoc.x > ((screen.x + screen.width) - shellSize.x)) {
+        shellLoc.x = (screen.x + screen.width) - shellSize.x;
+      }
+      if (anchor == SWT.NONE) {
+        if (shellLoc.y < screen.y) {
+          shellLoc.y = screen.y;
+        } else if (shellLoc.y > ((screen.y + screen.height) - shellSize.y)) {
+          shellLoc.y = (screen.y + screen.height) - shellSize.y;
+        }
+      }
+    }
+    shell.setLocation(shellLoc);
   }
 
   /**
@@ -698,10 +745,10 @@ public class BalloonWindow {
    *    polygon.
    */
   private static int[] createOutline(Point size, int anchor, boolean outer) {
-    final int o = outer ? 1 : 0;
+    LOGGER.debug("createOutline: {}, {}, {}", size, anchor, outer);
+    final int o = outer ? OUTER_OFFSET : 0;
     final int w = size.x + o;
     final int h = size.y + o;
-
     switch (anchor) {
     case SWT.RIGHT | SWT.BOTTOM:
       return new int[] {
@@ -810,14 +857,11 @@ public class BalloonWindow {
           w - 23 - o, 8, w - 23 - o, 7, w - 22 - o, 7, w - 22 - o, 6,
           w - 21 - o, 6, w - 21 - o, 5, w - 20 - o, 5, w - 20 - o, 4,
           w - 19 - o, 4, w - 19 - o, 3, w - 18 - o, 3, w - 18 - o, 2,
-          w - 17 - o, 2, w - 17 - o, 1, w - 16 - o, 1, w - 16 - o, 0, w - 16,
-          0,
-          w - 16,
-          20,
+          w - 17 - o, 2, w - 17 - o, 1, w - 16 - o, 1, w - 16 - o, 0, w - 16, 0,
+          w - 16, 20,
           // top and top right
           w - 6, 20, w - 6, 21, w - 4, 21, w - 4, 22, w - 3, 22, w - 3, 23,
-          w - 2, 23, w - 2, 25, w - 1,
-          25,
+          w - 2, 23, w - 2, 25, w - 1, 25,
           // right and bottom right
           w - 1, h - 6, w - 2, h - 6, w - 2, h - 4, w - 3, h - 4, w - 3, h - 3,
           w - 4, h - 3, w - 4, h - 2, w - 6, h - 2, w - 6, h - 1,
@@ -835,14 +879,10 @@ public class BalloonWindow {
           23 + o, 9, 24 + o, 9, 24 + o, 10, 25 + o, 10, 25 + o, 11, 26 + o, 11,
           26 + o, 12, 27 + o, 12, 27 + o, 13, 28 + o, 13, 28 + o, 14, 29 + o,
           14, 29 + o, 15, 30 + o, 15, 30 + o, 16, 31 + o, 16, 31 + o, 17,
-          32 + o, 17, 32 + o, 18, 33 + o, 18, 33 + o, 19, 34 + o,
-          19,
-          34 + o,
-          20,
+          32 + o, 17, 32 + o, 18, 33 + o, 18, 33 + o, 19, 34 + o, 19, 34 + o, 20,
           // top and top right
           w - 6, 20, w - 6, 21, w - 4, 21, w - 4, 22, w - 3, 22, w - 3, 23,
-          w - 2, 23, w - 2, 25, w - 1,
-          25,
+          w - 2, 23, w - 2, 25, w - 1, 25,
           // right and bottom right
           w - 1, h - 6, w - 2, h - 6, w - 2, h - 4, w - 3, h - 4, w - 3, h - 3,
           w - 4, h - 3, w - 4, h - 2, w - 6, h - 2, w - 6, h - 1,
@@ -851,12 +891,72 @@ public class BalloonWindow {
           1, h - 6, 0, h - 6,
           // left and top left
           0, 25, 1, 25, 1, 23, 2, 23, 2, 22, 3, 22, 3, 21, 5, 21 };
+    case SWT.TOP:
+      return new int[] {
+          // top and anchor
+          5, 20, (w / 2) - 10 - o, 20, (w / 2) - o, 0, (w / 2), 0, (w / 2) + 10, 20,
+          //  top right
+          w - 6, 20, w - 6, 21, w - 4, 21, w - 4, 22, w - 3, 22,  w - 3, 23,
+          w - 2, 23, w - 2, 25, w - 1, 25,
+          // right and bottom right
+          w - 1, h - 6, w - 2, h - 6, w - 2, h - 4, w - 3, h - 4, w - 3, h - 3,
+          w - 4, h - 3, w - 4, h - 2, w - 6, h - 2, w - 6, h - 1,
+          // bottom and bottom left
+          5, h - 1, 5, h - 2, 3, h - 2, 3, h - 3, 2, h - 3, 2, h - 4, 1, h - 4,
+          1, h - 6, 0, h - 6,
+          // left and top left
+          0, 25, 1, 25, 1, 23, 2, 23, 2, 22, 3, 22, 3, 21, 5, 21};
+    case SWT.BOTTOM:
+      return new int[] {
+          // top and top right
+          5, 0, w - 6, 0, w - 6, 1, w - 4, 1, w - 4, 2, w - 3, 2, w - 3, 3,
+          w - 2, 3, w - 2, 5, w - 1, 5,
+          // right and bottom right
+          w - 1, h - 26, w - 2, h - 26, w - 2, h - 24, w - 3, h - 24,
+          w - 3, h - 23, w - 4, h - 23, w - 4, h - 22, w - 6, h - 22,
+          w - 6, h - 21,
+          // bottom and anchor
+          (w / 2) + 10, h - 21, (w / 2), h - 1, (w / 2) - 10, h - 21,
+          // bottom left
+          5, h - 21, 5, h - 22, 3, h - 22, 3, h - 23, 2, h - 23, 2, h - 24,
+          1, h - 24, 1, h - 26, 0, h - 26,
+          // left and top left
+          0, 5, 1, 5, 1, 3, 2, 3, 2, 2, 3, 2, 3, 1, 5, 1 };
+    case SWT.LEFT:
+      return new int[] {
+          // top and top right
+          25, 0, w - 6, 0, w - 6, 1, w - 4, 1, w - 4, 2, w - 3, 2, w - 3, 3,
+          w - 2, 3, w - 2, 5, w - 1, 5,
+          // right and bottom right
+          w - 1, h - 6, w - 2, h - 6, w - 2, h - 4, w - 3, h - 4, w - 3, h - 3,
+          w - 4, h - 3, w - 4, h - 2, w - 6, h - 2, w - 6, h - 1,
+          // bottom and bottom left
+          25, h - 1, 25, h - 2, 23, h - 2, 23, h - 3, 22, h - 3, 22, h - 4, 21, h - 4,
+          21, h - 6, 20, h - 6,
+          // left and anchor
+          20, (h / 2) + 10, 0, h / 2, 0, (h / 2) - o, 20, (h / 2) - 10 - o,
+          // top left
+          20, 5, 21, 5, 21, 3, 22, 3, 22, 2, 23, 2, 23, 1, 25, 1 };
+    case SWT.RIGHT:
+      return new int[] {
+          // top and top right
+          5, 0, w - 26, 0, w - 26, 1, w - 24, 1, w - 24, 2, w - 23, 2, w - 23, 3,
+          w - 22, 3, w - 22, 5, w - 21, 5,
+          //  right and anchor
+          w - 21, (h / 2) - 10 - o, w - 1, (h / 2) - o, w - 1, h / 2,  w - 21, (h / 2) + 10,
+          // bottom right
+          w - 21, h - 6, w - 22, h - 6, w - 22, h - 4, w - 23, h - 4, w - 23, h - 3,
+          w - 24, h - 3, w - 24, h - 2, w - 26, h - 2, w - 26, h - 1,
+          // bottom and bottom left
+          5, h - 1, 5, h - 2, 3, h - 2, 3, h - 3, 2, h - 3, 2, h - 4, 1, h - 4,
+          1, h - 6, 0, h - 6,
+          // left and top left
+          0, 5, 1, 5, 1, 3, 2, 3, 2, 2, 3, 2, 3, 1, 5, 1 };
     default:
       return new int[] {
           // top and top right
           5, 0, w - 6, 0, w - 6, 1, w - 4, 1, w - 4, 2, w - 3, 2, w - 3, 3,
-          w - 2, 3, w - 2, 5, w - 1,
-          5,
+          w - 2, 3, w - 2, 5, w - 1, 5,
           // right and bottom right
           w - 1, h - 6, w - 2, h - 6, w - 2, h - 4, w - 3, h - 4, w - 3, h - 3,
           w - 4, h - 3, w - 4, h - 2, w - 6, h - 2, w - 6, h - 1,

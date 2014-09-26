@@ -193,10 +193,15 @@ public class ActionContributionItemEx extends ContributionItem {
    *
    * @param action
    *          the action
+   * @author Haixing Hu
    */
   public ActionContributionItemEx(ActionEx action) {
     super(action.getId());
     this.action = action;
+    //  set the show image property
+    showImage = action.isShowImage();
+    // set the visibility
+    setVisible(action.isVisible());
   }
 
   /**

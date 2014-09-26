@@ -17,7 +17,6 @@ package com.github.haixing_hu.swt.menu;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.action.ContributionManager;
 import org.eclipse.jface.action.ExternalActionManager;
@@ -618,6 +617,12 @@ public class MenuManagerEx extends ContributionManager implements IMenuManager {
   /**
    * Tests whether this menu manager will show the image on the children menu
    * item.
+   * <p>
+   * <b>NOTE:</b> Each {@link ActionEx} could set its own "showImage" property.
+   * If a {@link MenuManagerEx} sets its "showImage" property property to false,
+   * it will suppress all "showImage" property in its actions. Otherwise,
+   * whether the image should be displayed depends on the "showImage" property
+   * of the action.
    *
    * @return <code>true</code> if this menu manager will show the image on the
    *         children menu item; <code>false</code> otherwise.
@@ -630,6 +635,12 @@ public class MenuManagerEx extends ContributionManager implements IMenuManager {
   /**
    * Sets whether this menu manager will show the image on the children menu
    * item.
+   * <p>
+   * <b>NOTE:</b> Each {@link ActionEx} could set its own "showImage" property.
+   * If a {@link MenuManagerEx} sets its "showImage" property property to false,
+   * it will suppress all "showImage" property in its actions. Otherwise,
+   * whether the image should be displayed depends on the "showImage" property
+   * of the action.
    *
    * @param showImage
    *          <code>true</code> if this menu manager should show the image on the
@@ -1183,12 +1194,12 @@ public class MenuManagerEx extends ContributionManager implements IMenuManager {
    * @author Haixing Hu
    */
   public void add(ActionEx action) {
-    Assert.isNotNull(action, "ActionEx must not be null"); //$NON-NLS-1$
+    if (action == null) {
+      SWT.error(SWT.ERROR_NULL_ARGUMENT);
+    }
     final ActionContributionItemEx item = new ActionContributionItemEx(action);
-    item.setShowImage(showImage);
-    //  set the visibility of the item according to the visibility of the action.
-    if (! action.isVisible()) {
-      item.setVisible(false);
+    if (! showImage) {
+      item.setShowImage(false);
     }
     super.add(item);
   }

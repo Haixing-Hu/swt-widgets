@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.slf4j.Logger;
@@ -60,11 +61,8 @@ public class SubMenuCreator implements IMenuCreator {
    */
   public SubMenuCreator(IActionManager actionManager, String[] subActionIds,
       boolean showImage) {
-    if (actionManager == null) {
-      throw new NullPointerException("actionManager cannnot be null.");
-    }
-    if (subActionIds == null) {
-      throw new NullPointerException("subActionIds cannnot be null.");
+    if ((actionManager == null) || (subActionIds == null)) {
+      SWT.error(SWT.ERROR_NULL_ARGUMENT);
     }
     this.actionManager = actionManager;
     this.subActionIds = subActionIds;

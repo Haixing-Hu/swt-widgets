@@ -26,7 +26,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.github.haixing_hu.swt.utils.SWTResourceManager;
 import com.github.haixing_hu.swt.utils.SWTUtils;
-import com.github.haixing_hu.swt.window.BalloonWindow;
 
 /**
  * This snippet demonstrates the {@link BalloonWindow} widget.
@@ -49,6 +48,10 @@ public class BalloonWindowExample {
     createButton(shell, SWT.RIGHT | SWT.TOP);
     createButton(shell, SWT.LEFT | SWT.BOTTOM);
     createButton(shell, SWT.RIGHT | SWT.BOTTOM);
+    createButton(shell, SWT.TOP);
+    createButton(shell, SWT.BOTTOM);
+    createButton(shell, SWT.LEFT);
+    createButton(shell, SWT.RIGHT);
 
     shell.open();
     while (!shell.isDisposed()) {

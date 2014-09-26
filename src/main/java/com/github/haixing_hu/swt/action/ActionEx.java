@@ -30,6 +30,7 @@ public abstract class ActionEx extends org.eclipse.jface.action.Action {
 
   private boolean visible = true;
   private boolean showDialog = false;
+  private boolean showImage = true;
 
   /**
    * Creates a new action with no text and no image.
@@ -124,4 +125,26 @@ public abstract class ActionEx extends org.eclipse.jface.action.Action {
     this.showDialog = showDialog;
   }
 
+  /**
+   * Gets whether the menu item or tool bar item created by this action will
+   * display its image.
+   *
+   * @return true if the menu item or tool bar item created by this action will
+   *         display its image; false otherwise.
+   */
+  public boolean isShowImage() {
+    return showImage;
+  }
+
+  /**
+   * Sets whether the menu item or tool bar item created by this action will
+   * display its image.
+   *
+   * @param showImage
+   *          true if the menu item or tool bar item created by this action will
+   *          display its image; false otherwise.
+   */
+  public void setShowImage(boolean showImage) {
+    this.showImage = showImage;
+  }
 }
