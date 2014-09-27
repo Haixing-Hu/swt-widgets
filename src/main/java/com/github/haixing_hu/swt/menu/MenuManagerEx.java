@@ -1199,6 +1199,7 @@ public class MenuManagerEx extends ContributionManager implements IMenuManager {
     }
     final ActionContributionItemEx item = new ActionContributionItemEx(action);
     if (! showImage) {
+      action.setShowImage(false);
       item.setShowImage(false);
     }
     super.add(item);
