@@ -38,11 +38,6 @@ import com.github.haixing_hu.swt.menu.SubMenuCreator;
  */
 public class DropDownAction extends ActionEx {
 
-  /**
-   * The key for the separator item.
-   */
-  public static final String SEPARATOR_KEY = SubMenuCreator.SEPARATOR_KEY;
-
   protected final IActionManager actionManager;
   protected final SubMenuCreator subMenuCreator;
   protected final Logger logger;
