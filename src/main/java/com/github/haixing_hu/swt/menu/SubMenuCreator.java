@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.action.IMenuCreator;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.haixing_hu.swt.action.ActionEx;
 import com.github.haixing_hu.swt.action.IActionManager;
+import com.github.haixing_hu.swt.toolbar.Separator;
 
 /**
  * A {@link IMenuCreator} which create a sub-menu.
@@ -35,11 +35,6 @@ import com.github.haixing_hu.swt.action.IActionManager;
  * @author Haixing Hu
  */
 public class SubMenuCreator implements IMenuCreator {
-
-  /**
-   * The key for the separator item.
-   */
-  public static final String SEPARATOR_KEY = "SEPARATOR";
 
   private final IActionManager actionManager;
   private final String[] subActionIds;
@@ -119,8 +114,8 @@ public class SubMenuCreator implements IMenuCreator {
 
   private void addActions(MenuManagerEx menuManager) {
     for (final String id : subActionIds) {
-      if (id.equals(SEPARATOR_KEY)) {
-        logger.trace("Adding a separator to the sub-menu: {}", id);
+      if (id.equals(Separator.ID)) {
+        logger.debug("Adding a separator to the sub-menu: {}", id);
         menuManager.add(new Separator());
       } else {
         final ActionEx action = actionManager.get(id);

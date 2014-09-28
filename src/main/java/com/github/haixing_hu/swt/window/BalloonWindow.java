@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.Widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +104,8 @@ public class BalloonWindow {
   private int marginBottom = DEFAULT_MARGIN_BOTTOM;
   private int titleSpacing = DEFAULT_TITLE_SPACING;
   private int titleWidgetSpacing = DEFAULT_TITLE_WIDGET_SPACING;
+  private boolean closeOnClickInside = false;
+  private boolean closeOnClickOutside = false;
   private final int style;
   private final Shell shell;
   private Canvas titleIcon;
@@ -149,6 +150,9 @@ public class BalloonWindow {
    */
   public BalloonWindow(final Shell parent, final int style) {
     this.style = style;
+    if ((style & SWT.CLOSE) == 0) {
+      closeOnClickInside = true;
+    }
     final int shellStyle = (style & (SWT.ON_TOP | SWT.TOOL)) | SWT.NO_TRIM;
     shell = new Shell(parent, shellStyle);
     final Display display = shell.getDisplay();
@@ -216,7 +220,7 @@ public class BalloonWindow {
   }
 
   private void onDispose(Event event) {
-    LOGGER.debug("onDispose()");
+    LOGGER.trace("onDispose()");
     final Control parent = shell.getParent ();
     parent.removeListener (SWT.Dispose, parentListener);
     shell.removeListener (SWT.Dispose, shellListener);
@@ -235,7 +239,7 @@ public class BalloonWindow {
   }
 
   private void onShow(Event event) {
-    LOGGER.debug("onShow()");
+    LOGGER.trace("onShow()");
     if (! addedGlobalListener) {
       shell.getDisplay().addFilter(SWT.MouseDown, globalListener);
       addedGlobalListener = true;
@@ -243,35 +247,30 @@ public class BalloonWindow {
   }
 
   private void onHide(Event event) {
-    LOGGER.debug("onHide()");
+    LOGGER.trace("onHide()");
     if (addedGlobalListener) {
       shell.getDisplay().removeFilter(SWT.MouseDown, globalListener);
       addedGlobalListener = false;
     }
   }
 
-  private void onClose(Event event) {
-    LOGGER.debug("onClose()");
-    shell.close();
-  }
-
   private void onMouseDown(Event event) {
-    LOGGER.debug("onMouseDown()");
-    final Widget w = event.widget;
+    LOGGER.trace("onMouseDown()");
     for (int i = selectionControls.size() - 1; i >= 0; i--) {
-      if (selectionControls.get(i) == w) {
-        if (closeButton != null) {
+      if (selectionControls.get(i) == event.widget) {
+        if (closeOnClickInside) {
+          close();
+        } else {
           for (int j = selectionListeners.size() - 1; j >= 0; j--) {
             selectionListeners.get(j).handleEvent(event);
           }
-        } else {
-          //  if there is no close button on the title bar of this balloon
-          //  window, click any of the selection control will close this
-          //  balloon window.
-          onClose(event);
         }
         event.doit = false;
+        return;
       }
+    }
+    if (closeOnClickOutside) {
+      close();
     }
   }
 
@@ -380,7 +379,7 @@ public class BalloonWindow {
    * @param text
    *    The text of the title of this balloon window.
    */
-  public void setTitleText(String text) {
+  public void setTitle(String text) {
     shell.setText(text);
   }
 
@@ -391,7 +390,7 @@ public class BalloonWindow {
    * @param image
    *          the image of the title of this balloon window.
    */
-  public void setTitleImage(Image image) {
+  public void setImage(Image image) {
     shell.setImage(image);
   }
 
@@ -437,10 +436,88 @@ public class BalloonWindow {
     contents.setForeground(color);
   }
 
+  /**
+   * Tests whether this window will be closed when the user click anywhere
+   * inside this window.
+   * <p>
+   * <b>NOTE:</b> The default value of this property is <code>false</code>; but
+   * if the window is created without a close button, this property is set to
+   * <code>true</code> by default.
+   *
+   * @return <code>true</code> if this window will be closed when the user click
+   *         anywhere inside this window; <code>false</code> otherwise.
+   */
+  public boolean isCloseOnClickInside() {
+    return closeOnClickInside;
+  }
+
+  /**
+   * Sets whether this window will be closed when the user click anywhere inside
+   * this window.
+   * <p>
+   * <b>NOTE:</b> The default value of this property is <code>false</code>; but
+   * if the window is created without a close button, this property is set to
+   * <code>true</code> by default.
+   *
+   * @param closeOnClickInside
+   *          <code>true</code> if this window will be closed when the user
+   *          click anywhere inside this window; <code>false</code> otherwise.
+   */
+  public void setCloseOnClickInside(boolean closeOnClickInside) {
+    this.closeOnClickInside = closeOnClickInside;
+  }
+
+  /**
+   * Tests whether this window will be closed when the user click anywhere
+   * outside this window.
+   * <p>
+   * The default value of this property is <code>false</code>.
+   * <p>
+   * <b>NOTE:</b> If this value is set to <code>true</code>, the controls to the
+   * contents of this window (returned by calling {@link #getContents()})
+   * <b>MUST</b> be added to the selection control list of this window by
+   * calling the {@link #addSelectionControl(Control)} method.
+   *
+   * @return <code>true</code> if this window will be closed when the user click
+   *         anywhere outside this window; <code>false</code> otherwise.
+   */
+  public boolean isCloseOnClickOutside() {
+    return closeOnClickOutside;
+  }
+
+  /**
+   * Sets whether this window will be closed when the user click anywhere
+   * outside this window.
+   * <p>
+   * <b>NOTE:</b> The default value of this property is <code>false</code>.
+   * <p>
+   * <b>NOTE:</b> If this value is set to <code>true</code>, the controls to the
+   * contents of this window (returned by calling {@link #getContents()})
+   * <b>MUST</b> be added to the selection control list of this window by
+   * calling the {@link #addSelectionControl(Control)} method.
+   *
+   * @param closeOnClickInside
+   *          <code>true</code> if this window will be closed when the user
+   *          click anywhere outside this window; <code>false</code> otherwise.
+   */
+  public void setCloseOnClickOutside(boolean closeOnClickOutside) {
+    this.closeOnClickOutside = closeOnClickOutside;
+  }
+
   public Shell getShell() {
     return shell;
   }
 
+  /**
+   * Gets the contents composite of this window, in order to add customized
+   * widgets to this window.
+   * <p>
+   * <b>NOTE:</b> the controls added to the contents of this window <b>MUST</b>
+   * be added to the selection control list of this window by calling
+   * {@link #addSelectionControl(Control)}.
+   *
+   * @return the contents composite of this window.
+   */
   public Composite getContents() {
     return contents;
   }
@@ -467,7 +544,8 @@ public class BalloonWindow {
    * Closes and disposes this balloon window.
    */
   public void close() {
-    onClose(null);
+    LOGGER.trace("onClose()");
+    shell.close();
   }
 
   private void prepareForOpen() {
@@ -481,8 +559,8 @@ public class BalloonWindow {
     }
     contentsSize.y += titleSize.y;
 
-    LOGGER.debug("Title size is {}", titleSize);
-    LOGGER.debug("Contents size is {}", contentsSize);
+    LOGGER.trace("Title size is {}", titleSize);
+    LOGGER.trace("Contents size is {}", contentsSize);
     final int anchor = calculateAnchor();
     final Point shellSize = setShellSize(anchor);
     putShellChildren(anchor, shellSize);
@@ -506,7 +584,7 @@ public class BalloonWindow {
   }
 
   private Canvas createTitleIcon(final Composite parent, final Image icon) {
-    LOGGER.debug("Creating the title icon.");
+    LOGGER.trace("Creating the title icon.");
     final Canvas canvas = new Canvas(parent, SWT.NONE);
     canvas.setBackground(parent.getBackground());
     canvas.setBounds(icon.getBounds());
@@ -520,7 +598,7 @@ public class BalloonWindow {
   }
 
   private Label createTitleLabel(Composite parent, String text) {
-    LOGGER.debug("Creating the title label.");
+    LOGGER.trace("Creating the title label.");
     final Label label = new Label(parent, SWT.NONE);
     label.setBackground(parent.getBackground());
     label.setForeground(parent.getForeground());
@@ -532,7 +610,7 @@ public class BalloonWindow {
   }
 
   private ToolBar createCloseButton(Composite parent) {
-    LOGGER.debug("Creating the close button.");
+    LOGGER.trace("Creating the close button.");
     final ToolBar toolbar = new ToolBar(parent, SWT.FLAT | SWT.NO_FOCUS);
     toolbar.setBackground(parent.getBackground());
     toolbar.setForeground(parent.getForeground());
@@ -549,7 +627,7 @@ public class BalloonWindow {
     item.addListener(SWT.Selection, new Listener() {
       @Override
       public void handleEvent(Event event) {
-        onClose(event);
+        close();
       }
     });
     return toolbar;
@@ -602,7 +680,7 @@ public class BalloonWindow {
         }
       }
     }
-    LOGGER.debug("Set anchor to {}", anchor);
+    LOGGER.trace("Set anchor to {}", anchor);
     return anchor;
   }
 
@@ -632,7 +710,7 @@ public class BalloonWindow {
       shellSize = new Point(0, 0);
       SWT.error(SWT.ERROR_INVALID_ARGUMENT);
     }
-    LOGGER.debug("Set shell size to {}", shellSize);
+    LOGGER.trace("Set shell size to {}", shellSize);
     shell.setSize(shellSize);
     return shellSize;
   }
@@ -647,26 +725,26 @@ public class BalloonWindow {
         final Point iconSize = titleIcon.getSize();
         titleIcon.setLocation(offsetLeft,
             offsetTop + ((realTitleHeight - iconSize.y) / 2));
-        LOGGER.debug("Set title icon at {}", titleIcon.getLocation());
+        LOGGER.trace("Set title icon at {}", titleIcon.getLocation());
         final Point labelSize = titleLabel.getSize();
         titleLabel.setLocation(offsetLeft + iconSize.x + titleWidgetSpacing,
             offsetTop + ((realTitleHeight - labelSize.y) / 2));
-        LOGGER.debug("Set title label at {}", titleLabel.getLocation());
+        LOGGER.trace("Set title label at {}", titleLabel.getLocation());
       } else {
         final Point labelSize = titleLabel.getSize();
         titleLabel.setLocation(offsetLeft,
             offsetTop + ((realTitleHeight - labelSize.y) / 2));
-        LOGGER.debug("Set title label at {}", titleLabel.getLocation());
+        LOGGER.trace("Set title label at {}", titleLabel.getLocation());
       }
       if (closeButton != null) {
         final Point closeSize = closeButton.getSize();
         closeButton.setLocation(shellSize.x - offsetRight - closeSize.x,
             offsetTop + ((realTitleHeight - closeSize.y) / 2));
-        LOGGER.debug("Set close button at {}", closeButton.getLocation());
+        LOGGER.trace("Set close button at {}", closeButton.getLocation());
       }
     }
     final int contentsLocY = titleSize.y + offsetTop;
-    LOGGER.debug("Set contents at {}, {}", offsetLeft, contentsLocY);
+    LOGGER.trace("Set contents at {}, {}", offsetLeft, contentsLocY);
     contents.setLocation(offsetLeft, contentsLocY);
   }
 
@@ -687,7 +765,7 @@ public class BalloonWindow {
     shell.addListener(SWT.Paint, new Listener() {
       @Override
       public void handleEvent(Event event) {
-        LOGGER.debug("onPaint()");
+        LOGGER.trace("onPaint()");
         event.gc.drawPolygon(border);
       }
     });
@@ -763,7 +841,7 @@ public class BalloonWindow {
    *    polygon.
    */
   private static int[] createOutline(Point size, int anchor, boolean outer) {
-    LOGGER.debug("createOutline: {}, {}, {}", size, anchor, outer);
+    LOGGER.trace("createOutline: {}, {}, {}", size, anchor, outer);
     final int o = outer ? OUTER_OFFSET : 0;
     final int w = size.x + o;
     final int h = size.y + o;

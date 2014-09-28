@@ -109,11 +109,11 @@ public class BalloonWindowExample {
   }
 
   private static BalloonWindow createBalloonWindow(Shell shell, int anchor) {
-    final int style =  SWT.ON_TOP | SWT.TITLE | SWT.CLOSE;
+    final int style =  SWT.TITLE;
     final BalloonWindow bw = new BalloonWindow(shell, style);
-    bw.setTitleText("This is the title text");
+    bw.setTitle("This is the title text");
     final Display display = shell.getDisplay();
-    bw.setTitleImage(display.getSystemImage(SWT.ICON_WARNING));
+    bw.setImage(display.getSystemImage(SWT.ICON_WARNING));
     final Label label = new Label(bw.getContents(), SWT.WRAP);
     label.setText("You can add any widgets to the contents composite of the "
         + "balloon window. You can add any widgets to the contents composite of the "
