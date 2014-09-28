@@ -183,7 +183,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be hidden.
    */
   public final void hideSubAction(String id) {
-    logger.debug("Hide the sub-action: {}", id);
+    logger.trace("Hide the sub-action: {}", id);
     setSubActionVisible(id, false);
   }
 
@@ -198,7 +198,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be shown.
    */
   public final void showSubAction(String id) {
-    logger.debug("Show the sub-action: {}", id);
+    logger.trace("Show the sub-action: {}", id);
     setSubActionVisible(id, true);
   }
 
@@ -213,7 +213,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be hidden.
    */
   public final void hideSubActions(String ... ids) {
-    logger.debug("Hide the sub-actions: {}", (Object[])ids);
+    logger.trace("Hide the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionVisible(id, false);
     }
@@ -230,7 +230,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be shown.
    */
   public final void showSubActions(String ... ids) {
-    logger.debug("Show the sub-actions: {}", (Object[])ids);
+    logger.trace("Show the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionVisible(id, true);
     }
@@ -272,7 +272,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be set to unchecked.
    */
   public final void uncheckSubAction(String id) {
-    logger.debug("Uncheck the sub-action: {}", id);
+    logger.trace("Uncheck the sub-action: {}", id);
     setSubActionChecked(id, false);
   }
 
@@ -287,7 +287,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be set to checked.
    */
   public final void checkSubAction(String id) {
-    logger.debug("Check the sub-action: {}", id);
+    logger.trace("Check the sub-action: {}", id);
     setSubActionChecked(id, true);
   }
 
@@ -302,7 +302,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be set to unchecked.
    */
   public final void uncheckSubActions(String ... ids) {
-    logger.debug("Uncheck the sub-actions: {}", (Object[])ids);
+    logger.trace("Uncheck the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionChecked(id, false);
     }
@@ -319,7 +319,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be set to checked.
    */
   public final void checkSubActions(String ... ids) {
-    logger.debug("Check the sub-actions: {}", (Object[])ids);
+    logger.trace("Check the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionChecked(id, true);
     }
@@ -362,7 +362,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be disabled.
    */
   public final void disableSubAction(String id) {
-    logger.debug("Disable the sub-action: {}", id);
+    logger.trace("Disable the sub-action: {}", id);
     setSubActionEnabled(id, false);
   }
 
@@ -377,7 +377,7 @@ public class DropDownAction extends ActionEx {
    *          the ID of the sub-action to be enabled.
    */
   public final void enableSubAction(String id) {
-    logger.debug("Enable the sub-action: {}", id);
+    logger.trace("Enable the sub-action: {}", id);
     setSubActionEnabled(id, true);
   }
 
@@ -392,7 +392,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be disabled.
    */
   public final void disableSubActions(String ... ids) {
-    logger.debug("Disable the sub-actions: {}", (Object[])ids);
+    logger.trace("Disable the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionEnabled(id, false);
     }
@@ -409,7 +409,7 @@ public class DropDownAction extends ActionEx {
    *          the IDs of sub-actions to be enabled.
    */
   public final void enableSubActions(String ... ids) {
-    logger.debug("Enable the sub-actions: {}", (Object[])ids);
+    logger.trace("Enable the sub-actions: {}", (Object[])ids);
     for (final String id : ids) {
       setSubActionEnabled(id, true);
     }

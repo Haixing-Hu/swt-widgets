@@ -82,10 +82,10 @@ public class SubMenuCreator implements IMenuCreator {
 
   @Override
   public Menu getMenu(Control parent) {
-    logger.debug("Getting the submenu for parent: {}", parent);
+    logger.trace("Getting the submenu for parent: {}", parent);
     MenuManagerEx menuManager = subMenuCache.get(parent);
     if (menuManager == null) {
-      logger.debug("Creating a submenu for parent: {}", parent);
+      logger.trace("Creating a submenu for parent: {}", parent);
       menuManager = new MenuManagerEx(showImage);
       addActions(menuManager);
       menuManager.createContextMenu(parent);
@@ -96,10 +96,10 @@ public class SubMenuCreator implements IMenuCreator {
 
   @Override
   public Menu getMenu(Menu parent) {
-    logger.debug("Getting the submenu for parent: {}", parent);
+    logger.trace("Getting the submenu for parent: {}", parent);
     MenuManagerEx menuManager = subMenuCache.get(parent);
     if (menuManager == null) {
-      logger.debug("Creating a submenu for parent: {}", parent);
+      logger.trace("Creating a submenu for parent: {}", parent);
       menuManager = new MenuManagerEx(showImage);
       addActions(menuManager);
       menuManager.createSubMenu(parent);
@@ -120,12 +120,12 @@ public class SubMenuCreator implements IMenuCreator {
   private void addActions(MenuManagerEx menuManager) {
     for (final String id : subActionIds) {
       if (id.equals(SEPARATOR_KEY)) {
-        logger.debug("Adding a separator to the sub-menu: {}", id);
+        logger.trace("Adding a separator to the sub-menu: {}", id);
         menuManager.add(new Separator());
       } else {
         final ActionEx action = actionManager.get(id);
         if (action != null) {
-          logger.debug("Adding an action to the sub-menu: {}", id);
+          logger.trace("Adding an action to the sub-menu: {}", id);
           menuManager.add(action);
         } else {
           logger.error("Cannot found the action in the action manager: {}", id);
