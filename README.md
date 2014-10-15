@@ -13,7 +13,7 @@ Some of those widgets are ported from other open source projects, others are wri
 This project depends on the following projects. The depended projects **must** be built in the order listed below.
 
 * [pom-root](https://github.com/Haixing-Hu/pom-root)
-* [Java-Commons](https://github.com/Haixing-Hu/commons)
+* [commons](https://github.com/Haixing-Hu/commons)
 
 ## Widgets
 
